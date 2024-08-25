@@ -103,8 +103,15 @@ public class UserService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id",user.getId());
         claims.put("name",user.getName());
+        claims.put("email",user.getEmail());
         claims.put("role",user.getRole());
         String jwt = genjwt.genJwt(claims);
-        return Result.success("登录","登陆成功",jwt);
+        Map<String, Object> data = new HashMap<>();
+        data.put("id",user.getId());
+        data.put("email",user.getEmail());
+        data.put("name",user.getName());
+        data.put("role",user.getRole());
+        data.put("token",jwt);
+        return Result.success("登录","登陆成功",data);
     }
 }
