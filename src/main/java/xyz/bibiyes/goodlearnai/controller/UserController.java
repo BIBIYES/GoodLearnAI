@@ -3,7 +3,7 @@ package xyz.bibiyes.goodlearnai.controller;
 import org.springframework.web.bind.annotation.*;
 import xyz.bibiyes.goodlearnai.from.LoginFrom;
 import xyz.bibiyes.goodlearnai.from.RegisterFrom;
-import xyz.bibiyes.goodlearnai.service.UsersService;
+import xyz.bibiyes.goodlearnai.service.UserService;
 import xyz.bibiyes.goodlearnai.utils.Result;
 
 import javax.annotation.Resource;
@@ -15,10 +15,10 @@ import java.security.NoSuchAlgorithmException;
 @CrossOrigin
 @RestController
 @RequestMapping("/goodlearnai")
-public class UsersController {
+public class UserController {
 
     @Resource
-    private UsersService usersService;
+    private UserService usersService;
 
     /**
      * 用户注册 学生 or 老师
