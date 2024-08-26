@@ -1,8 +1,8 @@
 package xyz.bibiyes.goodlearnai.controller;
 
 import org.springframework.web.bind.annotation.*;
-import xyz.bibiyes.goodlearnai.entity.Questions;
-import xyz.bibiyes.goodlearnai.service.QuestionsService;
+import xyz.bibiyes.goodlearnai.entity.Question;
+import xyz.bibiyes.goodlearnai.service.QuestionService;
 import xyz.bibiyes.goodlearnai.utils.Result;
 import javax.annotation.Resource;
 /**
@@ -11,10 +11,10 @@ import javax.annotation.Resource;
 @CrossOrigin
 @RestController
 @RequestMapping("/goodlearnai")
-public class    QuestionsController {
+public class QuestionController {
 
     @Resource
-    private QuestionsService questionsService;
+    private QuestionService questionsService;
     // 获取问题的接口
     @GetMapping("/questions")
     public Result getQuestions(@RequestParam(defaultValue = "1") Integer page ,
@@ -24,7 +24,7 @@ public class    QuestionsController {
 
     // 添加题目的接口
     @PostMapping("/questions")
-    public Result addQuestion(@RequestBody Questions question) {
+    public Result addQuestion(@RequestBody Question question) {
         System.out.println(question);
         return questionsService.addQuestion(question);
     }
@@ -41,7 +41,7 @@ public class    QuestionsController {
      * 更新题目的数据
      */
     @PutMapping("/questions")
-    public Result updateQuestion(@RequestBody Questions question) {
+    public Result updateQuestion(@RequestBody Question question) {
         return questionsService.updateById(question);
     }
 }

@@ -4,8 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.bibiyes.goodlearnai.entity.Questions;
-import xyz.bibiyes.goodlearnai.mapper.QuestionsMapper;
+import xyz.bibiyes.goodlearnai.entity.Question;
+import xyz.bibiyes.goodlearnai.mapper.QuestionMapper;
 import xyz.bibiyes.goodlearnai.utils.Result;
 
 import javax.annotation.Resource;
@@ -16,13 +16,13 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class QuestionsService {
+public class QuestionService {
 
     @Resource
-    private QuestionsMapper questionMapper;
+    private QuestionMapper questionMapper;
 
     // 添加题目
-    public Result addQuestion(Questions question) {
+    public Result addQuestion(Question question) {
         try {
             // 使用 MyBatis-Plus 的 insert 方法插入数据
             questionMapper.insert(question);
@@ -40,16 +40,16 @@ public class QuestionsService {
         if (id == null) {
             // 使用pageHelper分页
             PageHelper.startPage(page, pageSize);
-            List<Questions> questions = questionMapper.findByTitle(title);
+            List<Question> questions = questionMapper.findByTitle(title);
 
             // 使用 PageInfo 封装查询结果
-            PageInfo<Questions> pageInfo = new PageInfo<>(questions);
+            PageInfo<Question> pageInfo = new PageInfo<>(questions);
 
             return Result.success("questions", "返回题目成功",pageInfo);
         }
         else {
 
-            Questions question = questionMapper.selectById(id);
+            Question question = questionMapper.selectById(id);
             return Result.success("question", "返回题目成功", question);
         }
 
@@ -68,7 +68,7 @@ public class QuestionsService {
         }
     }
 
-    public Result updateById(Questions question) {
+    public Result updateById(Question question) {
         try{
             int flag = questionMapper.updateById(question);
             if (flag >= 1) {

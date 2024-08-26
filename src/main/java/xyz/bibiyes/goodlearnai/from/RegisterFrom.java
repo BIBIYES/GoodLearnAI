@@ -10,6 +10,7 @@ public class RegisterFrom {
     private String name;
     private String email;
     private String password;
+    private String confirmPassword;
     private String role;
     private String authenticator;
 

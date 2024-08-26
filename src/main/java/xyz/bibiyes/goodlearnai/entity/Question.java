@@ -8,7 +8,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Questions {
+public class Question {
     private int id;
     private String title;
     private String content;

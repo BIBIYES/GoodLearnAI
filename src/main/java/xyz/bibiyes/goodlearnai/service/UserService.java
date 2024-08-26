@@ -39,27 +39,37 @@ public class UserService {
      * @throws NoSuchAlgorithmException  md5加密异常
      */
     public Result register(RegisterFrom registerFrom) throws NoSuchAlgorithmException {
-        // 1. 验证邮箱是否存在
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("email", registerFrom.getEmail());
-        User user = usersMapper.selectOne(queryWrapper);
-        if (user != null) {
-            return Result.error("注册", "邮箱已注册");
+        log.info("+++++++++++++++++{}",registerFrom.getName());
+        log.info("+++++++++++++++++{}",registerFrom.getEmail());
+        log.info("+++++++++++++++++{}",registerFrom.getPassword());
+        log.info("+++++++++++++++++{}",registerFrom.getConfirmPassword());
+        log.info("+++++++++++++++++{}",registerFrom.getRole());
+        log.info("+++++++++++++++++{}",registerFrom.getAuthenticator());
+        if (registerFrom.getPassword().equals(registerFrom.getConfirmPassword())) {
+            // 1. 验证邮箱是否存在
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("email", registerFrom.getEmail());
+            User user = usersMapper.selectOne(queryWrapper);
+            if (user != null) {
+                return Result.error("注册", "邮箱已注册");
+            }
+
+            // 2. 验证角色和鉴权码
+            if (isRoleValid(registerFrom)) {
+                // 3. 密码加密
+                String password = md5.hashPassword(registerFrom.getPassword());
+
+                // 4. 保存用户信息
+                User newUser = createUser(registerFrom, password);
+                usersMapper.insert(newUser);
+
+                return Result.success("注册", "注册成功");
+            } else {
+                return Result.error("注册", "鉴权码认证失败");
+            }
         }
+        return Result.error("注册" , "两次密码不一致");
 
-        // 2. 验证角色和鉴权码
-        if (isRoleValid(registerFrom)) {
-            // 3. 密码加密
-            String password = md5.hashPassword(registerFrom.getPassword());
-
-            // 4. 保存用户信息
-            User newUser = createUser(registerFrom, password);
-            usersMapper.insert(newUser);
-
-            return Result.success("注册", "注册成功");
-        } else {
-            return Result.error("注册", "鉴权码认证失败");
-        }
     }
 
     // 验证角色和鉴权码

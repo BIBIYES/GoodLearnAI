@@ -25,8 +25,7 @@ public class UserController {
      */
     @PostMapping("/register")
     public Result register(@RequestBody RegisterFrom registerForm) throws NoSuchAlgorithmException {
-        return usersService.register(registerForm);
-
+            return usersService.register(registerForm);
     }
 
     /**
