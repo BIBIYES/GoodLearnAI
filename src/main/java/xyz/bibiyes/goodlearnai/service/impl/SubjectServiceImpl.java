@@ -11,7 +11,8 @@ import java.util.List;
 
 @Service
 public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> implements SubjectService {
-    @Resource SubjectMapper subjectMapper;
+    @Resource
+    SubjectMapper subjectMapper;
 
     @Override
     public List<Subject> list() {
@@ -19,8 +20,8 @@ public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> impl
     }
 
     @Override
-    public boolean save(String name) {
-        return subjectMapper.insertName(name) > 0;
+    public boolean save(Subject subject) {
+        return subjectMapper.insert(subject) > 0;
     }
 
 

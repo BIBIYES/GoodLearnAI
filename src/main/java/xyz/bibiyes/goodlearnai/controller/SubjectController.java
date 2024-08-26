@@ -23,8 +23,8 @@ public class SubjectController {
     }
 
     @PostMapping("/subject")
-    public Result addSubject(String name) {
-        return Result.success("Subject", "添加科目成功", subjectService.save(name));
+    public Result addSubject(Subject subject) {
+        return Result.success("Subject", "添加科目成功", subjectService.save(subject));
     }
 
     @PutMapping("/subject")
@@ -33,7 +33,12 @@ public class SubjectController {
     }
 
     @DeleteMapping("/subject")
-    public boolean deleteSubject(@RequestParam(defaultValue = "id") Long id) {
-        return subjectService.removeById(id);
+    public Result deleteSubject(@RequestParam Long id) {
+        if(subjectService.removeById(id)){
+            return Result.success("Subject","删除科目成功");
+        }else{
+            return Result.error("Subject","删除科目失败");
+        }
+
     }
 }
