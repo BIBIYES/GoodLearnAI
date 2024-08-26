@@ -6,7 +6,6 @@ import xyz.bibiyes.goodlearnai.mapper.ChapterMapper;
 import xyz.bibiyes.goodlearnai.service.ChapterService;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Service
 public class ChapterServiceImpl implements ChapterService {
@@ -34,8 +33,5 @@ public class ChapterServiceImpl implements ChapterService {
         return chapterMapper.deleteById(id) > 0;
     }
 
-    @Override
-    public List<Chapter> getAllChapters() {
-        return chapterMapper.selectList(null);
-    }
+
 }
