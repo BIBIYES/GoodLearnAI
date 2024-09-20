@@ -1,22 +1,18 @@
 package xyz.bibiyes.goodlearnai.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.*;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 
-/**
- * @author Mouse Sakura
- */
+import java.time.LocalDateTime;
+
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@TableName("question")
 public class Question {
     @TableId(type = IdType.AUTO)
-    private Long id;
-    private String title;
-    private String content;
-    private String prompt;
-    private String uploadDate;
-    private Long userId;
-
+    private Integer questionId;
+    private String questionTitle;
+    private String questionContent;
+    private LocalDateTime creationDate;
+    private Integer courseId;
+    private Integer teacherId;
 }

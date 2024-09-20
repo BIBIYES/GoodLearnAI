@@ -1,84 +1,15 @@
 package xyz.bibiyes.goodlearnai.service;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import xyz.bibiyes.goodlearnai.entity.Question;
-import xyz.bibiyes.goodlearnai.mapper.QuestionMapper;
-import xyz.bibiyes.goodlearnai.utils.Result;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * @author Mouse Sakura
- */
-@Service
-@Slf4j
-public class QuestionService {
+public interface QuestionService {
+    List<Question> getQuestionsByCourseId(Long courseId);
+    boolean deleteQuestionById(Long questionId);
+    boolean saveQuestion(Question question);  // 添加保存题目的方法
+    boolean updateQuestion(Question question); // 添加更新题目的方法
+    List<Question> getAllQuestions();
 
-    @Resource
-    private QuestionMapper questionMapper;
-
-    // 添加题目
-    public Result addQuestion(Question question) {
-        try {
-            // 使用 MyBatis-Plus 的 insert 方法插入数据
-            questionMapper.insert(question);
-
-            return Result.success("question", "题目添加成功", null);
-
-        } catch (Exception e) {
-            return Result.error("question", "题目添加失败");
-        }
-
-    }
-
-    // 模糊查询题目
-    public Result findByTitle(Integer page,Integer pageSize , String title,Integer id) {
-        if (id == null) {
-            // 使用pageHelper分页
-            PageHelper.startPage(page, pageSize);
-            List<Question> questions = questionMapper.findByTitle(title);
-
-            // 使用 PageInfo 封装查询结果
-            PageInfo<Question> pageInfo = new PageInfo<>(questions);
-
-            return Result.success("questions", "返回题目成功",pageInfo);
-        }
-        else {
-
-            Question question = questionMapper.selectById(id);
-            return Result.success("question", "返回题目成功", question);
-        }
-
-    }
-
-    public Result delById(Integer id) {
-        try {
-            int flag = questionMapper.deleteById(id);
-            if (flag >= 1) {
-                return Result.success("questions", "删除成功");
-            }
-
-            return Result.error("questions", "删除失败");
-        } catch (Exception e) {
-            return Result.error("questions", "异常报错");
-        }
-    }
-
-    public Result updateById(Question question) {
-        try{
-            int flag = questionMapper.updateById(question);
-            if (flag >= 1) {
-                return Result.success("questions","更新问题成功");
-            }
-            return Result.error("questions","更新问题失败");
-        }
-        catch (Exception e) {
-            return  Result.error("questions","异常报错");
-        }
-    }
+    Question getQuestionById(Long questionId);
 }
-

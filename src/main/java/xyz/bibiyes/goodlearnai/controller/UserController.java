@@ -14,7 +14,6 @@ import java.security.NoSuchAlgorithmException;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/goodlearnai")
 public class UserController {
 
     @Resource

@@ -1,47 +1,82 @@
 package xyz.bibiyes.goodlearnai.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.bibiyes.goodlearnai.entity.Question;
 import xyz.bibiyes.goodlearnai.service.QuestionService;
 import xyz.bibiyes.goodlearnai.utils.Result;
-import javax.annotation.Resource;
-/**
- * @author Mouse Sakura
- */
-@CrossOrigin
+
+import java.util.List;
+
 @RestController
-@RequestMapping("/goodlearnai")
+@RequestMapping("/question")
+@CrossOrigin
 public class QuestionController {
 
-    @Resource
-    private QuestionService questionsService;
-    // 获取问题的接口
+    @Autowired
+    private QuestionService questionService;
+
+    // 获取所有题目
     @GetMapping("/questions")
-    public Result getQuestions(@RequestParam(defaultValue = "1") Integer page ,
-                               @RequestParam(defaultValue = "5") Integer pageSize , String title, Integer id){
-        return questionsService.findByTitle(page,pageSize,title,id);
+    public Result getAllQuestions() {
+        List<Question> questions = questionService.getAllQuestions();
+        if (questions != null && !questions.isEmpty()) {
+            return Result.success("questions", "Questions retrieved successfully", questions);
+        } else {
+            return Result.error("questions", "No questions found");
+        }
+    }
+    // 根据 ID 获取题目详情
+    @GetMapping("/{questionId}")
+    public Result getQuestionById(@PathVariable Long questionId) {
+        Question question = questionService.getQuestionById(questionId);
+        if (question != null) {
+            return Result.success("question", "Question retrieved successfully", question);
+        } else {
+            return Result.error("question", "No question found for the provided ID");
+        }
+    }
+    // 创建或更新题目
+    @PostMapping("/create")
+    public Result createOrUpdateQuestion(@RequestBody Question question) {
+        if (question.getQuestionId() != null) {
+            // 更新操作，调用自定义的 updateQuestion 方法
+            boolean updated = questionService.updateQuestion(question);
+            if (updated) {
+                return Result.success("question", "Question updated successfully", question);
+            } else {
+                return Result.error("question", "Failed to update question");
+            }
+        } else {
+            // 插入操作，调用自定义的 saveQuestion 方法
+            boolean saved = questionService.saveQuestion(question);
+            if (saved) {
+                return Result.success("question", "Question created successfully", question);
+            } else {
+                return Result.error("question", "Failed to create question");
+            }
+        }
     }
 
-    // 添加题目的接口
-    @PostMapping("/questions")
-    public Result addQuestion(@RequestBody Question question) {
-        System.out.println(question);
-        return questionsService.addQuestion(question);
+    // 根据课程 ID 获取题目
+    @GetMapping("/course/{courseId}")
+    public Result getQuestionsByCourseId(@PathVariable Long courseId) {
+        List<Question> questions = questionService.getQuestionsByCourseId(courseId);
+        if (questions != null && !questions.isEmpty()) {
+            return Result.success("question", "Questions retrieved successfully", questions);
+        } else {
+            return Result.error("question", "No questions found for the course");
+        }
     }
 
-    /**
-     * 根据题目id删除题目
-     */
-    @DeleteMapping("/questions")
-    public Result deleteQuestion(@RequestParam Integer id) {
-        return questionsService.delById(id);
-    }
-
-    /**
-     * 更新题目的数据
-     */
-    @PutMapping("/questions")
-    public Result updateQuestion(@RequestBody Question question) {
-        return questionsService.updateById(question);
+    // 删除题目
+    @DeleteMapping("/delete/{questionId}")
+    public Result deleteQuestion(@PathVariable Long questionId) {
+        boolean removed = questionService.deleteQuestionById(questionId);
+        if (removed) {
+            return Result.success("question", "Question deleted successfully");
+        } else {
+            return Result.error("question", "Failed to delete question");
+        }
     }
 }

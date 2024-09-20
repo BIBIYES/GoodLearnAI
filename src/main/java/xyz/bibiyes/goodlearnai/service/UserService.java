@@ -55,7 +55,7 @@ public class UserService {
             }
 
             // 2. 验证角色和鉴权码
-            if (isRoleValid(registerFrom)) {
+            if (isRoleValid(registerFrom) || registerFrom.getRole().equals("student")) {
                 // 3. 密码加密
                 String password = md5.hashPassword(registerFrom.getPassword());
 
