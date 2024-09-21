@@ -1,8 +1,10 @@
 package xyz.bibiyes.goodlearnai.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import xyz.bibiyes.goodlearnai.entity.ExamPaperQuestion;
 import xyz.bibiyes.goodlearnai.entity.Question;
 
@@ -11,16 +13,26 @@ import java.util.List;
 @Mapper
 public interface ExamPaperQuestionMapper {
 
-    // 获取试卷中的题目
-    List<Question> getQuestionsByExamPaperId(@Param("examPaperId") Integer examPaperId);
+    /**
+     * 根据试卷ID获取关联的题目列表
+     */
+    @Select("SELECT q.* FROM exam_paper_question epq " +
+            "JOIN question q ON epq.question_id = q.question_id " +
+            "WHERE epq.exam_paper_id = #{examPaperId}")
+    List<Question> selectQuestionsByPaperId(Long examPaperId);
 
-    // 获取课程中的题目（不在当前试卷中的）
-    List<Question> getAvailableQuestions(@Param("courseId") Integer courseId, @Param("examPaperId") Integer examPaperId);
+    /**
+     * 删除试卷ID的所有关联
+     */
+    void deleteByPaperId(Long paperId);
 
-    // 添加题目到试卷
-    int insert(ExamPaperQuestion examPaperQuestion);
+    /**
+     * 删除试卷中某个题目的关联
+     */
+    boolean deleteByPaperIdAndQuestionId(@Param("paperId") Long paperId, @Param("questionId") Long questionId);
 
-    // 删除试卷中的题目
-    @Delete("DELETE FROM exam_paper_question WHERE exam_paper_id = #{examPaperId} AND question_id = #{questionId}")
-    int deleteByExamPaperAndQuestion(@Param("examPaperId") Integer examPaperId, @Param("questionId") Integer questionId);
+    /**
+     * 插入新的试卷-题目关联
+     */
+    void insert(@Param("paperId") Long paperId, @Param("questionId") Long questionId);
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @TableName("question")
 public class Question {
     @TableId(type = IdType.AUTO)
-    private Integer questionId;
+    private Long questionId;
     private String questionTitle;
     private String questionContent;
     private LocalDateTime creationDate;

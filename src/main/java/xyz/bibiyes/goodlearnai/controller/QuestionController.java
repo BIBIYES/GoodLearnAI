@@ -9,74 +9,105 @@ import xyz.bibiyes.goodlearnai.utils.Result;
 import java.util.List;
 
 @RestController
-@RequestMapping("/question")
+@RequestMapping("/questions")
 @CrossOrigin
 public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
 
-    // 获取所有题目
-    @GetMapping("/questions")
+    /**
+     * 获取所有题目。
+     *
+     * @return 返回封装好的所有题目的列表，如果没有题目则返回错误信息。
+     */
+    @GetMapping
     public Result getAllQuestions() {
         List<Question> questions = questionService.getAllQuestions();
         if (questions != null && !questions.isEmpty()) {
-            return Result.success("questions", "Questions retrieved successfully", questions);
+            return Result.success("Questions retrieved successfully", questions);
         } else {
-            return Result.error("questions", "No questions found");
+            return Result.error("No questions found");
         }
     }
-    // 根据 ID 获取题目详情
+
+    /**
+     * 根据题目 ID 获取题目详情。
+     * @param questionId 题目的唯一标识。
+     * @return 返回指定题目的详细信息，如果题目不存在则返回错误信息。
+     */
     @GetMapping("/{questionId}")
     public Result getQuestionById(@PathVariable Long questionId) {
         Question question = questionService.getQuestionById(questionId);
         if (question != null) {
-            return Result.success("question", "Question retrieved successfully", question);
+            return Result.success("Question retrieved successfully", question);
         } else {
-            return Result.error("question", "No question found for the provided ID");
-        }
-    }
-    // 创建或更新题目
-    @PostMapping("/create")
-    public Result createOrUpdateQuestion(@RequestBody Question question) {
-        if (question.getQuestionId() != null) {
-            // 更新操作，调用自定义的 updateQuestion 方法
-            boolean updated = questionService.updateQuestion(question);
-            if (updated) {
-                return Result.success("question", "Question updated successfully", question);
-            } else {
-                return Result.error("question", "Failed to update question");
-            }
-        } else {
-            // 插入操作，调用自定义的 saveQuestion 方法
-            boolean saved = questionService.saveQuestion(question);
-            if (saved) {
-                return Result.success("question", "Question created successfully", question);
-            } else {
-                return Result.error("question", "Failed to create question");
-            }
+            return Result.error("No question found for the provided ID");
         }
     }
 
-    // 根据课程 ID 获取题目
-    @GetMapping("/course/{courseId}")
+    /**
+     * 创建新的题目。
+     * @param question 新题目的详细信息。
+     * @return 如果创建成功，返回创建成功的信息，否则返回错误信息。
+     */
+    @PostMapping
+    public Result createQuestion(@RequestBody Question question) {
+        boolean saved = questionService.saveQuestion(question);
+        if (saved) {
+            return Result.success("Question created successfully", question);
+        } else {
+            return Result.error("Failed to create question");
+        }
+    }
+
+    /**
+     * 更新指定题目。
+     *
+     * @param questionId 需要更新的题目的唯一标识。
+     * @param question   题目的新信息。
+     * @return 如果更新成功，返回更新成功的信息，否则返回错误信息。
+     */
+    @PutMapping("/{questionId}")
+    public Result updateQuestion(@PathVariable Long questionId, @RequestBody Question question) {
+        question.setQuestionId(questionId);  // 设置ID，确保更新操作
+        boolean updated = questionService.updateQuestion(question);
+        if (updated) {
+            return Result.success("Question updated successfully", question);
+        } else {
+            return Result.error("Failed to update question");
+        }
+    }
+
+    /**
+     * 根据课程 ID 获取该课程下的所有题目。
+     *
+     * @param courseId 课程的唯一标识。
+     * @return 返回指定课程下的题目列表，如果课程没有题目则返回错误信息。
+     */
+    @GetMapping("/courses/{courseId}")
     public Result getQuestionsByCourseId(@PathVariable Long courseId) {
         List<Question> questions = questionService.getQuestionsByCourseId(courseId);
         if (questions != null && !questions.isEmpty()) {
-            return Result.success("question", "Questions retrieved successfully", questions);
+            return Result.success("Questions retrieved successfully", questions);
         } else {
-            return Result.error("question", "No questions found for the course");
+            return Result.error("No questions found for the course");
         }
     }
 
-    // 删除题目
-    @DeleteMapping("/delete/{questionId}")
+    /**
+     * 根据题目 ID 删除指定的题目。
+     *
+     * @param questionId 题目的唯一标识。
+     * @return 如果删除成功，返回删除成功的信息，否则返回错误信息。
+     */
+    @DeleteMapping("/{questionId}")
     public Result deleteQuestion(@PathVariable Long questionId) {
         boolean removed = questionService.deleteQuestionById(questionId);
         if (removed) {
-            return Result.success("question", "Question deleted successfully");
+            return Result.success("Question deleted successfully");
         } else {
-            return Result.error("question", "Failed to delete question");
+            return Result.error("Failed to delete question");
         }
     }
 }

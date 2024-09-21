@@ -51,7 +51,7 @@ public class UserService {
             queryWrapper.eq("email", registerFrom.getEmail());
             User user = usersMapper.selectOne(queryWrapper);
             if (user != null) {
-                return Result.error("注册", "邮箱已注册");
+                return Result.error( "邮箱已注册");
             }
 
             // 2. 验证角色和鉴权码
@@ -63,12 +63,12 @@ public class UserService {
                 User newUser = createUser(registerFrom, password);
                 usersMapper.insert(newUser);
 
-                return Result.success("注册", "注册成功");
+                return Result.success( "注册成功");
             } else {
-                return Result.error("注册", "鉴权码认证失败");
+                return Result.error("鉴权码认证失败");
             }
         }
-        return Result.error("注册" , "两次密码不一致");
+        return Result.error( "两次密码不一致");
 
     }
 
@@ -96,7 +96,7 @@ public class UserService {
         User user = usersMapper.selectOne(queryWrapper);
 
         if (user == null) {
-            return Result.error("登录", "用户不存在");
+            return Result.error("用户不存在");
         }
 
         // 2. 验证密码
@@ -107,7 +107,7 @@ public class UserService {
         String encryptedInputPassword = md5.hashPassword(inputPassword);
 
         if (!encryptedInputPassword.equals(storedPassword)) {
-            return Result.error("登录", "密码错误");
+            return Result.error("密码错误");
         }
         // 登录成功，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
@@ -122,6 +122,6 @@ public class UserService {
         data.put("name",user.getName());
         data.put("role",user.getRole());
         data.put("token",jwt);
-        return Result.success("登录","登陆成功",data);
+        return Result.success("登陆成功",data);
     }
 }
