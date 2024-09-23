@@ -7,6 +7,7 @@ import xyz.bibiyes.goodlearnai.mapper.ExamPaperQuestionMapper;
 import xyz.bibiyes.goodlearnai.service.ExamPaperQuestionService;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExamPaperQuestionServiceImpl implements ExamPaperQuestionService {
@@ -18,7 +19,7 @@ public class ExamPaperQuestionServiceImpl implements ExamPaperQuestionService {
      * 根据试卷ID获取关联的题目列表
      */
     @Override
-    public List<Question> getQuestionsByPaperId(Long paperId) {
+    public List<Question>  getQuestionsByPaperId(Long paperId) {
         return examPaperQuestionMapper.selectQuestionsByPaperId(paperId);
     }
 
@@ -28,7 +29,8 @@ public class ExamPaperQuestionServiceImpl implements ExamPaperQuestionService {
     @Override
     public boolean updateExamPaperQuestions(Long paperId, List<Long> questionIds) {
         // 先删除原有的关联
-        examPaperQuestionMapper.deleteByPaperId(paperId);
+        int rowsDeleted = examPaperQuestionMapper.deleteByPaperId(paperId);
+
 
         // 插入新的关联
         if (!questionIds.isEmpty()) {
@@ -36,8 +38,8 @@ public class ExamPaperQuestionServiceImpl implements ExamPaperQuestionService {
                 examPaperQuestionMapper.insert(paperId, questionId);
             }
         }
+        return rowsDeleted > 0;
 
-        return true; // 假设操作总是成功，如果有更多逻辑，可以调整返回值
     }
 
     /**

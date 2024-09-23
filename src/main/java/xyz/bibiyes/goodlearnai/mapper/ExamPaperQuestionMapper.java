@@ -1,14 +1,11 @@
 package xyz.bibiyes.goodlearnai.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import xyz.bibiyes.goodlearnai.entity.ExamPaperQuestion;
+
+import org.apache.ibatis.annotations.*;
 import xyz.bibiyes.goodlearnai.entity.Question;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ExamPaperQuestionMapper {
@@ -21,10 +18,8 @@ public interface ExamPaperQuestionMapper {
             "WHERE epq.exam_paper_id = #{examPaperId}")
     List<Question> selectQuestionsByPaperId(Long examPaperId);
 
-    /**
-     * 删除试卷ID的所有关联
-     */
-    void deleteByPaperId(Long paperId);
+
+
 
     /**
      * 删除试卷中某个题目的关联
@@ -34,5 +29,14 @@ public interface ExamPaperQuestionMapper {
     /**
      * 插入新的试卷-题目关联
      */
+    @Insert("INSERT INTO exam_paper_question (exam_paper_id, question_id) VALUES (#{paperId}, #{questionId})")
     void insert(@Param("paperId") Long paperId, @Param("questionId") Long questionId);
+
+    /**
+     * 删除试卷ID的所有关联
+     */
+    @Delete("DELETE FROM exam_paper_question WHERE exam_paper_id = #{paperId}")
+    int deleteByPaperId(Long paperId) ;
+
+
 }

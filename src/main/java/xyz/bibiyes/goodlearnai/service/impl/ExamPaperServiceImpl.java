@@ -38,5 +38,9 @@ public class ExamPaperServiceImpl implements ExamPaperService {
     public List<ExamPaper> getAllExamPapers() {
         return examPaperMapper.selectList(null); // MyBatis-Plus 提供的 selectList() 方法，无条件查询所有
     }
+    @Override
+    public ExamPaper selectExamPaperById(Long examPaperId){
+        return examPaperMapper.selectById(examPaperId);
+    }
 
 }

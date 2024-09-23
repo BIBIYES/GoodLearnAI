@@ -5,6 +5,8 @@ import xyz.bibiyes.goodlearnai.entity.Question;
 
 
 import java.util.List;
+import java.util.Map;
+
 public interface ExamPaperQuestionService {
 
     /**
@@ -13,6 +15,8 @@ public interface ExamPaperQuestionService {
      * @return 关联的题目列表
      */
     List<Question> getQuestionsByPaperId(Long paperId);
+
+    
 
     /**
      * 更新试卷的题目关联

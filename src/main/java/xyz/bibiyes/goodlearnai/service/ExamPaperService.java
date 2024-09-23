@@ -12,4 +12,5 @@ public interface ExamPaperService {
 
     List<ExamPaper> getAllExamPapers();
 
+    ExamPaper selectExamPaperById(Long examPaperId);
 }

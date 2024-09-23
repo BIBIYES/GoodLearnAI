@@ -76,5 +76,16 @@ public class ExamPaperController {
         }
     }
 
+    @GetMapping("/{examPaperId}")
+    public Result getExamPaperById(@PathVariable Long examPaperId) {
+        ExamPaper examPaper = examPaperService.selectExamPaperById(examPaperId);
+
+        // 判断 examPaper 对象是否为 null
+        if (examPaper != null) {
+            return Result.success("Exam papers retrieved successfully", examPaper);
+        } else {
+            return Result.error("No exam papers found for the given ID");
+        }
+    }
 
 }
