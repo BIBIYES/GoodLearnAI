@@ -112,7 +112,7 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>xyz.bibiyes.goodlearnai.GoodLearnAiApplication</mainClass>
-                    <skip>true</skip>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>
