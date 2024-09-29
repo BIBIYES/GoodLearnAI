@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         // 本地开发环境
                         "http://localhost",
+                        "http://localhost:5173",
                         // 部署的前端地址（使用域名）
                         "http://bibiyes.xyz/",
                         // 服务器的前端地址（使用IP）

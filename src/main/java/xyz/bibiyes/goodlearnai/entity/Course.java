@@ -12,5 +12,5 @@ public class Course {
     @TableId(type = IdType.AUTO)
     private Long courseId;
     private String courseName;
-    private Integer teacherId;
+    private Integer userId;
 }

@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * @author Mouse Sakura
  */
-@CrossOrigin
+
 @RestController
 public class UserController {
 
