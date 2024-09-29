@@ -4,7 +4,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
+
+ /**
+  * @author Sakura
+  */
+ @Configuration
 public class WebConfig implements WebMvcConfigurer {
     /**
      * 配置跨域请求的映射规则
@@ -14,13 +18,20 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // 配置全局跨域请求处理，允许所有来源，支持所有HTTP方法，并允许发送凭证（如Cookies）
-        registry.addMapping("/**") // 对所有请求路径生效
-                .allowedOrigins("*") // 允许所有来源
-                .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS") // 允许的HTTP方法
-                .allowCredentials(true) // 允许发送凭证
-                .maxAge(3600) // 预检请求的结果缓存时间，单位为秒
-                .allowedHeaders("*"); // 允许所有请求头
+        registry.addMapping("/**")
+                .allowedOrigins(
+                        // 本地开发环境
+                        "http://localhost",
+                        // 部署的前端地址（使用域名）
+                        "http://bibiyes.xyz/",
+                        // 服务器的前端地址（使用IP）
+                        "http://8.137.114.76"
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                // 允许所有请求头
+                .allowedHeaders("*")
+                // 允许发送凭证（如 Cookies）
+                .allowCredentials(true);
     }
 
 }

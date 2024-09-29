@@ -39,25 +39,25 @@ public class UserService {
      * @throws NoSuchAlgorithmException  md5加密异常
      */
     public Result register(RegisterFrom registerFrom) throws NoSuchAlgorithmException {
-        log.info("+++++++++++++++++{}",registerFrom.getName());
-        log.info("+++++++++++++++++{}",registerFrom.getEmail());
-        log.info("+++++++++++++++++{}",registerFrom.getPassword());
+        log.info("+++++++++++++++++{}",registerFrom.getUsername());
+        log.info("+++++++++++++++++{}",registerFrom.getUserEmail());
+        log.info("+++++++++++++++++{}",registerFrom.getUserPassword());
         log.info("+++++++++++++++++{}",registerFrom.getConfirmPassword());
-        log.info("+++++++++++++++++{}",registerFrom.getRole());
+        log.info("+++++++++++++++++{}",registerFrom.getUserRole());
         log.info("+++++++++++++++++{}",registerFrom.getAuthenticator());
-        if (registerFrom.getPassword().equals(registerFrom.getConfirmPassword())) {
+        if (registerFrom.getUserPassword().equals(registerFrom.getConfirmPassword())) {
             // 1. 验证邮箱是否存在
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("email", registerFrom.getEmail());
+            queryWrapper.eq("user_email", registerFrom.getUserEmail());
             User user = usersMapper.selectOne(queryWrapper);
             if (user != null) {
                 return Result.error( "邮箱已注册");
             }
 
             // 2. 验证角色和鉴权码
-            if (isRoleValid(registerFrom) || registerFrom.getRole().equals("student")) {
+            if (isRoleValid(registerFrom) || "student".equals(registerFrom.getUserRole())) {
                 // 3. 密码加密
-                String password = md5.hashPassword(registerFrom.getPassword());
+                String password = md5.hashPassword(registerFrom.getUserPassword());
 
                 // 4. 保存用户信息
                 User newUser = createUser(registerFrom, password);
@@ -74,25 +74,25 @@ public class UserService {
 
     // 验证角色和鉴权码
     private boolean isRoleValid(RegisterFrom registerFrom) {
-        if ("teacher".equals(registerFrom.getRole())) {
+        if ("teacher".equals(registerFrom.getUserRole())) {
             return "Abcd1234".equals(registerFrom.getAuthenticator());
         }
-        return "students".equals(registerFrom.getRole());
+        return "students".equals(registerFrom.getUserRole());
     }
 
     // 创建用户对象
     private User createUser(RegisterFrom registerFrom, String password) {
         User user = new User();
-        user.setName(registerFrom.getName());
-        user.setEmail(registerFrom.getEmail());
-        user.setPassword(password);
-        user.setRole(registerFrom.getRole());
+        user.setUsername(registerFrom.getUsername());
+        user.setUserEmail(registerFrom.getUserEmail());
+        user.setUserPassword(password);
+        user.setUserRole(registerFrom.getUserRole());
         return user;
     }
     public Result login(LoginFrom loginFrom) throws NoSuchAlgorithmException {
         // 1. 验证邮箱是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("email", loginFrom.getEmail());
+        queryWrapper.eq("user_email", loginFrom.getUserEmail());
         User user = usersMapper.selectOne(queryWrapper);
 
         if (user == null) {
@@ -100,8 +100,8 @@ public class UserService {
         }
 
         // 2. 验证密码
-        String inputPassword = loginFrom.getPassword();
-        String storedPassword = user.getPassword();
+        String inputPassword = loginFrom.getUserPassword();
+        String storedPassword = user.getUserPassword();
 
         // 使用 MD5 对用户输入的密码进行加密
         String encryptedInputPassword = md5.hashPassword(inputPassword);
@@ -111,16 +111,16 @@ public class UserService {
         }
         // 登录成功，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put("id",user.getId());
-        claims.put("name",user.getName());
-        claims.put("email",user.getEmail());
-        claims.put("role",user.getRole());
+        claims.put("id",user.getUserId());
+        claims.put("name",user.getUsername());
+        claims.put("user_email",user.getUserEmail());
+        claims.put("role",user.getUserRole());
         String jwt = genjwt.genJwt(claims);
         Map<String, Object> data = new HashMap<>();
-        data.put("id",user.getId());
-        data.put("email",user.getEmail());
-        data.put("name",user.getName());
-        data.put("role",user.getRole());
+        data.put("id",user.getUserId());
+        data.put("user_email",user.getUserEmail());
+        data.put("name",user.getUsername());
+        data.put("role",user.getUserRole());
         data.put("token",jwt);
         return Result.success("登陆成功",data);
     }
