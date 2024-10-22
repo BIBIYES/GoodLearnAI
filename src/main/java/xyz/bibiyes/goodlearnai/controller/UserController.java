@@ -57,6 +57,9 @@ public class UserController {
          */
         String email = emailFrom.getEmail();
         System.out.println(email);
+        if(email.isEmpty()){
+            return Result.error("邮箱不能为空");
+        }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_email", email);
         User user = usersMapper.selectOne(queryWrapper);
