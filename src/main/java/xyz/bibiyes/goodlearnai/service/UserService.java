@@ -10,66 +10,66 @@ import xyz.bibiyes.goodlearnai.mapper.UserMapper;
 import xyz.bibiyes.goodlearnai.utils.Jjwt;
 import xyz.bibiyes.goodlearnai.utils.Md5;
 import xyz.bibiyes.goodlearnai.utils.Result;
+import xyz.bibiyes.goodlearnai.service.VerificationCodeService;
 
 import javax.annotation.Resource;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Mouse Sakura
- */
 @Service
 @Slf4j
 public class UserService {
-    // jwt令牌生成工具类
+
     @Resource
     private Jjwt genjwt;
-    // md5密码加密工具类
     @Resource
     private Md5 md5;
     @Resource
     private UserMapper usersMapper;
-
+    @Resource
+    private VerificationCodeService verificationCodeService;
 
     /**
      * 用户注册
+     *
      * @param registerFrom 封装的用户注册实体类
+     * @throws NoSuchAlgorithmException md5 加密异常
      * @return 返回成功或失败
-     * @throws NoSuchAlgorithmException  md5加密异常
      */
     public Result register(RegisterFrom registerFrom) throws NoSuchAlgorithmException {
-        log.info("+++++++++++++++++{}",registerFrom.getUsername());
-        log.info("+++++++++++++++++{}",registerFrom.getUserEmail());
-        log.info("+++++++++++++++++{}",registerFrom.getUserPassword());
-        log.info("+++++++++++++++++{}",registerFrom.getConfirmPassword());
-        log.info("+++++++++++++++++{}",registerFrom.getUserRole());
-        log.info("+++++++++++++++++{}",registerFrom.getAuthenticator());
-        if (registerFrom.getUserPassword().equals(registerFrom.getConfirmPassword())) {
-            // 1. 验证邮箱是否存在
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_email", registerFrom.getUserEmail());
-            User user = usersMapper.selectOne(queryWrapper);
-            if (user != null) {
-                return Result.error( "邮箱已注册");
-            }
+        log.info("+++++++++++++++++{}", registerFrom.getUsername());
+        log.info("+++++++++++++++++{}", registerFrom.getUserEmail());
+        log.info("+++++++++++++++++{}", registerFrom.getUserPassword());
+        log.info("+++++++++++++++++{}", registerFrom.getConfirmPassword());
+        log.info("+++++++++++++++++{}", registerFrom.getUserRole());
+        log.info("+++++++++++++++++{}", registerFrom.getAuthenticator());
 
-            // 2. 验证角色和鉴权码
-            if (isRoleValid(registerFrom) || "student".equals(registerFrom.getUserRole())) {
-                // 3. 密码加密
-                String password = md5.hashPassword(registerFrom.getUserPassword());
-
-                // 4. 保存用户信息
-                User newUser = createUser(registerFrom, password);
-                usersMapper.insert(newUser);
-
-                return Result.success( "注册成功");
-            } else {
-                return Result.error("鉴权码认证失败");
-            }
+        log.info("开始验证邮箱是否存在");
+        // 1. 验证邮箱是否存在
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_email", registerFrom.getUserEmail());
+        User user = usersMapper.selectOne(queryWrapper);
+        if (user!= null) {
+            return Result.error("邮箱已注册");
         }
-        return Result.error( "两次密码不一致");
 
+        // 2. 验证角色和鉴权码
+        log.info("开始验证角色和鉴权码");
+        if (isRoleValid(registerFrom) || "student".equals(registerFrom.getUserRole())) {
+            // 3. 密码加密
+            log.info("开始密码加密");
+            String password = md5.hashPassword(registerFrom.getUserPassword());
+
+            // 4. 保存用户信息
+            log.info("开始保存用户信息");
+            User newUser = createUser(registerFrom, password);
+            usersMapper.insert(newUser);
+
+            return Result.success("注册成功");
+        } else {
+            return Result.error("鉴权码认证失败");
+        }
     }
 
     // 验证角色和鉴权码
@@ -89,6 +89,7 @@ public class UserService {
         user.setUserRole(registerFrom.getUserRole());
         return user;
     }
+
     public Result login(LoginFrom loginFrom) throws NoSuchAlgorithmException {
         // 1. 验证邮箱是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -109,19 +110,19 @@ public class UserService {
         if (!encryptedInputPassword.equals(storedPassword)) {
             return Result.error("密码错误");
         }
-        // 登录成功，生成jwt令牌
+        // 登录成功，生成 jwt 令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put("id",user.getUserId());
-        claims.put("name",user.getUsername());
-        claims.put("user_email",user.getUserEmail());
-        claims.put("role",user.getUserRole());
+        claims.put("id", user.getUserId());
+        claims.put("name", user.getUsername());
+        claims.put("user_email", user.getUserEmail());
+        claims.put("role", user.getUserRole());
         String jwt = genjwt.genJwt(claims);
         Map<String, Object> data = new HashMap<>();
-        data.put("id",user.getUserId());
-        data.put("user_email",user.getUserEmail());
-        data.put("name",user.getUsername());
-        data.put("role",user.getUserRole());
-        data.put("token",jwt);
-        return Result.success("登陆成功",data);
+        data.put("id", user.getUserId());
+        data.put("user_email", user.getUserEmail());
+        data.put("name", user.getUsername());
+        data.put("role", user.getUserRole());
+        data.put("token", jwt);
+        return Result.success("登陆成功", data);
     }
 }

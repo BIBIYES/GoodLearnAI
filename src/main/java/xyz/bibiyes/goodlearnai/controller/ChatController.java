@@ -20,16 +20,14 @@ public class ChatController {
 
     public SseEmitter sseEmitter(String prompt) {
         // 设置代理，国内需要，国外不需要
-        Proxy proxy = Proxys.http("127.0.0.1", 10809); // 替换为你实际的代理地址和端口
+//        Proxy proxy = Proxys.http("127.0.0.1", 10809); // 替换为你实际的代理地址和端口
 
         // 初始化 ChatGPTStream 对象
-        ChatGPTStream chatGPTStream = ChatGPTStream.builder()
-                .timeout(600)
-                .apiKey("fastgpt-ejnDcudPOSfENpkEZxqMw2VcgHFapjSu4rmwRoiER6iqGd0NjXIfkt00n") // 替换为你的实际 API Key
-                .proxy(proxy)
-                .apiHost("https://api.fastgpt.in/api/") // 替换为你的实际 API 主机地址
-                .build()
-                .init();
+        // 替换为你的实际 API Key
+        ChatGPTStream chatGPTStream = ChatGPTStream.builder().timeout(600).apiKey("fastgpt-urpkByyW8oYea2ApEdvAzTaFsszfndHce36pZY7DXMC12NcXzt6aQ3")
+//                .proxy(proxy)
+                .apiHost("https://cloud.fastgpt.cn/api/") // 替换为你的实际 API 主机地址
+                .build().init();
 
         // 创建 SseEmitter 对象，用于推送事件到客户端
         SseEmitter sseEmitter = new SseEmitter(-1L); // -1L 表示不超时
@@ -41,7 +39,7 @@ public class ChatController {
         listener.setOnComplete(msg -> {
             // 回答完成后可以做一些处理
             System.out.println("Response completed: " + msg);
-            sseEmitter.complete();
+
         });
 
         // 开始流式处理并将结果通过 SseEmitter 发送到客户端

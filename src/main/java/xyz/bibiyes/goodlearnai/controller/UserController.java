@@ -1,20 +1,27 @@
 package xyz.bibiyes.goodlearnai.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.*;
+import xyz.bibiyes.goodlearnai.dto.EmailFrom;
 import xyz.bibiyes.goodlearnai.dto.StudentJoinedExamPaperDTO;
 import xyz.bibiyes.goodlearnai.entity.Course;
 import xyz.bibiyes.goodlearnai.entity.ExamPaper;
-import xyz.bibiyes.goodlearnai.entity.StudentAnswer;
 import xyz.bibiyes.goodlearnai.entity.StudentExamPaper;
 import xyz.bibiyes.goodlearnai.dto.LoginFrom;
 import xyz.bibiyes.goodlearnai.dto.RegisterFrom;
+import xyz.bibiyes.goodlearnai.entity.User;
+import xyz.bibiyes.goodlearnai.mapper.UserMapper;
 import xyz.bibiyes.goodlearnai.service.*;
+import xyz.bibiyes.goodlearnai.utils.EmailUtils;
 import xyz.bibiyes.goodlearnai.utils.Result;
+import xyz.bibiyes.goodlearnai.utils.VerificationCodeGenerator;
 
 import javax.annotation.Resource;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+
+import static xyz.bibiyes.goodlearnai.service.VerificationCodeService.verificationCodeCache;
 
 /**
  * @author Mouse Sakura
@@ -33,16 +40,50 @@ public class UserController {
     private ExamPaperService examPaperService;
     @Resource
     private StudentExamPaperService studentExamPaperService;
-
     @Resource
-    private StudentAnswerService studentAnswerService;
+    private VerificationCodeService verificationCodeService;
+    @Resource
+    private UserMapper usersMapper;
 
     /**
      * 用户注册 学生 or 老师
      */
+
+    @PostMapping("/send-verification-code")
+    public Result sendVerificationCode(@RequestBody EmailFrom emailFrom) {
+        /**
+            * Author: Chen Qinfeng
+            * Date: 2024-10-17
+         */
+        String email = emailFrom.getEmail();
+        System.out.println(email);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_email", email);
+        User user = usersMapper.selectOne(queryWrapper);
+        if (user != null) {
+            return Result.error("邮箱已注册");
+        }
+        verificationCodeService.sendVerificationCode(email);
+        System.out.println(verificationCodeCache.get(email));
+        if (verificationCodeCache.get(email) != null) {
+            return Result.error("请勿重复发送验证码");
+        }
+        return Result.success("验证码已发送至您的邮箱，请查收。");
+    }
+
     @PostMapping("/register")
     public Result register(@RequestBody RegisterFrom registerForm) throws NoSuchAlgorithmException {
-        return usersService.register(registerForm);
+        /**
+         * Author: Chen Qinfeng
+         * Date: 2024-10-17
+         */
+        // 验证验证码
+        if (VerificationCodeService.verifyVerificationCode(registerForm.getUserEmail(), registerForm.getVerificationCode())) {
+            return usersService.register(registerForm);
+        } else {
+            return Result.error("验证码错误");
+        }
+
     }
 
     /**
@@ -152,27 +193,4 @@ public class UserController {
     public Result getExamPapersByStudentId(@PathVariable Long userId) {
         return studentExamPaperService.getJoinedExamPapersByStudentId(userId);
     }
-
-    /**
-     * 提交试卷
-     *
-     * @param userId            用户ID
-     * @param examPaperId       试卷ID
-     * @param studentAnswerList 学生答案列表
-     * @return 返回成功或者失败
-     */
-    @PostMapping("/{userId}/exam-paper/{examPaperId}/student-answer")
-    public Result insertStudentAnswer(@PathVariable Long userId, @PathVariable Long examPaperId, @RequestBody List<StudentAnswer> studentAnswerList) {
-        System.out.println(userId);
-        System.out.println(examPaperId);
-        System.out.println(studentAnswerList);
-        boolean flag = studentAnswerService.insertStudentAnswerList(userId, examPaperId, studentAnswerList);
-        System.out.println(flag);
-        if (flag) {
-            return Result.success("所有答案已经全部提交");
-        } else {
-            return Result.error("答案提交失败");
-        }
-    }
-
 }
