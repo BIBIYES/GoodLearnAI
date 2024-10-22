@@ -32,8 +32,8 @@ public class VerificationCodeService {
                 if(verificationCodeCache.get(email) != null){
                     throw new CustomException("请勿重复发送验证码");
                 }
-                EmailUtils.sendAuthCodeEmail(email, verificationCode);
                 verificationCodeCache.put(email, verificationCode);
+                EmailUtils.sendAuthCodeEmail(email, verificationCode);
                 logger.info("验证码已生成并存储到缓存中，邮箱：{}，验证码：{}", email, verificationCode);
 
                 // 设置定时器删除验证码
