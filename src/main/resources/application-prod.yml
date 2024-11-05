@@ -1,0 +1,25 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+spring:
+  devtools:
+    restart:
+      enabled: true
+      # 自定义监控的路径，这里只监控 src/main/java 目录
+      additional-paths: src/main/java
+      # 排除不必要的路径，防止静态资源文件等变化触发重启
+      exclude: static/**,public/**,templates/**,log/**
+      # 轮询间隔，单位为毫秒（默认1000ms），设置为 2 秒
+      poll-interval: 2000
+      # 安静期，单位为毫秒（默认400ms），文件变更后等待 1 秒再重启
+      quiet-period: 1000
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/good_learn_ai?useSSL=false
+    username: root
+    password: mousecatcat
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

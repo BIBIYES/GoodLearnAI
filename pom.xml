@@ -79,7 +79,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version> 2.0.0</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
@@ -112,6 +112,7 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -141,5 +142,14 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <!-- 生产环境配置 -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

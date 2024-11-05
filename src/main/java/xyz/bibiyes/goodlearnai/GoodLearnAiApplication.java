@@ -13,6 +13,7 @@ public class GoodLearnAiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(GoodLearnAiApplication.class, args);
+
     }
 
 }

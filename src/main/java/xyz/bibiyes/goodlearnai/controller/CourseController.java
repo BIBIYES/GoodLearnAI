@@ -21,9 +21,9 @@ public class CourseController {
     private QuestionService questionService;
 
 
-
     /**
      * 获取所有课程
+     *
      * @return 返回所有课程
      */
     @GetMapping
@@ -33,8 +33,8 @@ public class CourseController {
 
     /**
      * 编辑课程信息
-     * @param course 课程对象
      *
+     * @param course 课程对象
      */
     @PutMapping("/{courseId}")
     public Result updateCourse(@PathVariable Long courseId, @RequestBody Course course) {
@@ -65,6 +65,7 @@ public class CourseController {
 
     /**
      * 获取课程详情
+     *
      * @param courseId 课程 id
      * @return 返回课程对象
      */
@@ -84,6 +85,7 @@ public class CourseController {
 
     /**
      * 创建新的题目。
+     *
      * @param question 新题目的详细信息。
      * @return 如果创建成功，返回创建成功的信息，否则返回错误信息。
      */
@@ -98,7 +100,19 @@ public class CourseController {
     }
 
     /**
+     * 批量添加题目
+     *
+     * @param questions 待添加的题目列表。
+     */
+    @PostMapping("/{courseId}/questions")
+    public Result createQuestions(@RequestBody List<Question> questions, @PathVariable Integer courseId) {
+        return questionService.saveQuestions(questions, courseId);
+
+    }
+
+    /**
      * 获取该课程下的所有题目
+     *
      * @param courseId 课程的唯一标识。
      * @return 返回指定课程下的题目列表，如果课程没有题目则返回错误信息。
      */

@@ -1,9 +1,7 @@
 package xyz.bibiyes.goodlearnai.utils;
 
 import org.springframework.stereotype.Service;
-
 import java.security.SecureRandom;
-import java.math.BigInteger;
 
 @Service
 public class VerificationCodeGenerator {
@@ -13,8 +11,10 @@ public class VerificationCodeGenerator {
      */
     public static String generateVerificationCode() {
         SecureRandom random = new SecureRandom();
-        return new BigInteger(130, random).toString(32).substring(0, 6);
+        int code = random.nextInt(10000);  // 生成 0 到 9999 之间的随机数
+        return String.format("%04d", code);  // 将其格式化为4位数字，保证有4位
     }
+
     public static boolean verifyVerificationCode(String generatedCode, String inputCode) {
         return generatedCode.equals(inputCode);
     }

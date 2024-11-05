@@ -4,12 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.*;
 import xyz.bibiyes.goodlearnai.dto.EmailFrom;
 import xyz.bibiyes.goodlearnai.dto.StudentJoinedExamPaperDTO;
-import xyz.bibiyes.goodlearnai.entity.Course;
-import xyz.bibiyes.goodlearnai.entity.ExamPaper;
-import xyz.bibiyes.goodlearnai.entity.StudentExamPaper;
+import xyz.bibiyes.goodlearnai.entity.*;
 import xyz.bibiyes.goodlearnai.dto.LoginFrom;
 import xyz.bibiyes.goodlearnai.dto.RegisterFrom;
-import xyz.bibiyes.goodlearnai.entity.User;
 import xyz.bibiyes.goodlearnai.mapper.UserMapper;
 import xyz.bibiyes.goodlearnai.service.*;
 import xyz.bibiyes.goodlearnai.utils.EmailUtils;
@@ -44,7 +41,8 @@ public class UserController {
     private VerificationCodeService verificationCodeService;
     @Resource
     private UserMapper usersMapper;
-
+    @Resource
+    private StudentAnswerService studentAnswerService;
     /**
      * 用户注册 学生 or 老师
      */
@@ -196,4 +194,27 @@ public class UserController {
     public Result getExamPapersByStudentId(@PathVariable Long userId) {
         return studentExamPaperService.getJoinedExamPapersByStudentId(userId);
     }
+
+    /**
+     * 提交试卷
+     *
+     * @param userId            用户ID
+     * @param examPaperId       试卷ID
+     * @param studentAnswerList 学生答案列表
+     * @return 返回成功或者失败
+     */
+    @PostMapping("/{userId}/exam-paper/{examPaperId}/student-answer")
+    public Result insertStudentAnswer(@PathVariable Long userId, @PathVariable Long examPaperId, @RequestBody List<StudentAnswer> studentAnswerList) {
+        System.out.println(userId);
+        System.out.println(examPaperId);
+        System.out.println(studentAnswerList);
+        boolean flag = studentAnswerService.insertStudentAnswerList(userId, examPaperId, studentAnswerList);
+        System.out.println(flag);
+        if (flag) {
+            return Result.success("所有答案已经全部提交");
+        } else {
+            return Result.error("答案提交失败");
+        }
+    }
+
 }

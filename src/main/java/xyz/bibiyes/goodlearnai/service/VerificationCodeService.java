@@ -40,7 +40,7 @@ public class VerificationCodeService {
                 scheduler.schedule(() -> {
                     verificationCodeCache.remove(email);
                     logger.info("验证码已从缓存中移除，邮箱：{}", email);
-                }, 1, TimeUnit.MINUTES);
+                }, 5, TimeUnit.MINUTES);
 
                 logger.info("验证码已成功发送到邮箱：{}", email);
             } catch (Exception e) {

@@ -1,6 +1,7 @@
 package xyz.bibiyes.goodlearnai.service;
 
 import xyz.bibiyes.goodlearnai.entity.Question;
+import xyz.bibiyes.goodlearnai.utils.Result;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface QuestionService {
     List<Question> getAllQuestions();
 
     Question getQuestionById(Long questionId);
+
+    Result saveQuestions(List<Question> questions, Integer courseId);
 }
