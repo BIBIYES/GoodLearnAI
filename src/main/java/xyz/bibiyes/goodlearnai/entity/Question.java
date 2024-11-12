@@ -12,6 +12,7 @@ public class Question {
     private Long questionId;
     private String questionTitle;
     private String questionContent;
+    private String answer;
     private String questionCreatedDate;
     private String questionUpdatedDate;
     private Integer courseId;

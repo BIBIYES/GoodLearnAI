@@ -3,20 +3,16 @@ package xyz.bibiyes.goodlearnai.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.*;
 import xyz.bibiyes.goodlearnai.dto.EmailFrom;
-import xyz.bibiyes.goodlearnai.dto.StudentJoinedExamPaperDTO;
-import xyz.bibiyes.goodlearnai.entity.*;
 import xyz.bibiyes.goodlearnai.dto.LoginFrom;
 import xyz.bibiyes.goodlearnai.dto.RegisterFrom;
+import xyz.bibiyes.goodlearnai.entity.*;
 import xyz.bibiyes.goodlearnai.mapper.UserMapper;
 import xyz.bibiyes.goodlearnai.service.*;
-import xyz.bibiyes.goodlearnai.utils.EmailUtils;
 import xyz.bibiyes.goodlearnai.utils.Result;
-import xyz.bibiyes.goodlearnai.utils.VerificationCodeGenerator;
 
 import javax.annotation.Resource;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Map;
 
 import static xyz.bibiyes.goodlearnai.service.VerificationCodeService.verificationCodeCache;
 
@@ -43,19 +39,20 @@ public class UserController {
     private UserMapper usersMapper;
     @Resource
     private StudentAnswerService studentAnswerService;
+
     /**
      * 用户注册 学生 or 老师
      */
 
     @PostMapping("/send-verification-code")
     public Result sendVerificationCode(@RequestBody EmailFrom emailFrom) {
-        /**
-            * Author: Chen Qinfeng
-            * Date: 2024-10-17
+        /*
+          Author: Chen Qinfeng
+          Date: 2024-10-17
          */
         String email = emailFrom.getEmail();
         System.out.println(email);
-        if(email.isEmpty()){
+        if (email.isEmpty()) {
             return Result.error("邮箱不能为空");
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -74,9 +71,9 @@ public class UserController {
 
     @PostMapping("/register")
     public Result register(@RequestBody RegisterFrom registerForm) throws NoSuchAlgorithmException {
-        /**
-         * Author: Chen Qinfeng
-         * Date: 2024-10-17
+        /*
+          Author: Chen Qinfeng
+          Date: 2024-10-17
          */
         // 验证验证码
         if (VerificationCodeService.verifyVerificationCode(registerForm.getUserEmail(), registerForm.getVerificationCode())) {
@@ -208,13 +205,15 @@ public class UserController {
         System.out.println(userId);
         System.out.println(examPaperId);
         System.out.println(studentAnswerList);
-        boolean flag = studentAnswerService.insertStudentAnswerList(userId, examPaperId, studentAnswerList);
-        System.out.println(flag);
-        if (flag) {
-            return Result.success("所有答案已经全部提交");
-        } else {
-            return Result.error("答案提交失败");
-        }
+
+            boolean flag = studentAnswerService.insertStudentAnswerList(userId, examPaperId, studentAnswerList);
+            System.out.println(flag);
+            if (flag) {
+                return Result.success("所有答案已经全部提交");
+            } else {
+                return Result.error("答案提交失败");
+            }
     }
+
 
 }

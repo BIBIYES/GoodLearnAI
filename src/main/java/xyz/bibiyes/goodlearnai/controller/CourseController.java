@@ -1,5 +1,7 @@
 package xyz.bibiyes.goodlearnai.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.bibiyes.goodlearnai.entity.Course;
@@ -106,6 +108,8 @@ public class CourseController {
      */
     @PostMapping("/{courseId}/questions")
     public Result createQuestions(@RequestBody List<Question> questions, @PathVariable Integer courseId) {
+        questions.forEach(System.out::println);
+        System.out.println(courseId);
         return questionService.saveQuestions(questions, courseId);
 
     }
@@ -117,13 +121,20 @@ public class CourseController {
      * @return 返回指定课程下的题目列表，如果课程没有题目则返回错误信息。
      */
     @GetMapping("{courseId}/questions")
-    public Result getQuestionsByCourseId(@PathVariable Long courseId) {
-        List<Question> questions = questionService.getQuestionsByCourseId(courseId);
-        if (questions != null && !questions.isEmpty()) {
-            return Result.success("Questions retrieved successfully", questions);
-        } else {
-            return Result.error("No questions found for the course");
-        }
+    public Result getQuestionsByCourseId(@PathVariable Long courseId,
+                                         @RequestParam(defaultValue = "1") int pageNum,
+                                         @RequestParam(defaultValue = "10") int pageSize) {
+        return questionService.getQuestionsByCourseId(courseId, pageNum, pageSize);
     }
+
+    /**
+     * 获取该课程下所有的题目支持模糊匹配
+     */
+    @GetMapping("/{courseId}/questions/search")
+    public Result searchQuestions(@PathVariable Long courseId, @RequestParam(defaultValue = "") String keyWord) {
+        return questionService.searchQuestions(courseId, keyWord);
+    }
+
+
 }
 
