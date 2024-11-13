@@ -11,4 +11,5 @@ public interface StudentExamPaperService {
     boolean joinExamPaper(StudentExamPaper studentExamPaper);
     Result getJoinedExamPapersByStudentId(Long userId);
 
+    Result getStudentExamPaperByExamPaperId(Long examPaperId);
 }

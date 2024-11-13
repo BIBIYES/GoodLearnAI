@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.bibiyes.goodlearnai.mapper.StudentExamPaperMapper">
+    <select id="getStudentExamPaperByExamPaperId" resultType="xyz.bibiyes.goodlearnai.vo.ExamPaperUserStatusVO">
+        SELECT
+        u.user_id AS userId,
+        u.username AS username,
+        sep.join_date AS joinDate,
+        sep.status AS status,
+        sep.exam_paper_id as examPaperId
+        FROM
+        student_exam_paper sep
+        JOIN
+        user u ON sep.user_id = u.user_id
+        WHERE
+        sep.exam_paper_id = #{examPaperId}
+    </select>
+</mapper>
