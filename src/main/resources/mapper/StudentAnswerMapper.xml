@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.bibiyes.goodlearnai.mapper.StudentAnswerMapper">
+
+    <select id="getExamPaperStudentAnswer" resultType="xyz.bibiyes.goodlearnai.vo.ExamPaperStudentAnswer">
+        select answer_content, ai_answer, user.username, question_title, question_content, exam_paper_name
+        from student_answer
+                 join user ON student_answer.user_id = user.user_id
+                 join question ON student_answer.exam_paper_question_id = question.question_id
+                 join exam_paper ON student_answer.exam_paper_id = exam_paper.exam_paper_id
+        where student_answer.user_id = #{userId} and student_answer.exam_paper_id = #{examPaperId};
+
+    </select>
+</mapper>
