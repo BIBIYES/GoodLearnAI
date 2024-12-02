@@ -29,5 +29,5 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 file:
   upload:
-    path: C:/upload/avatar/
+    path: /home/cqipc/Desktop/good_learn_ai/file/avatar/
     url-prefix: /uploads/avatar/
