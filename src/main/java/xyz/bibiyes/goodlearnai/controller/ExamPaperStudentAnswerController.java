@@ -17,8 +17,8 @@ import java.util.List;
 public class ExamPaperStudentAnswerController {
     @Resource
     private StudentAnswerService studentAnswerService;
-    @GetMapping("/ExamPaperStudentAnswer")
-    public Result getExamPaperStudentAnswer(@RequestParam Long examPaperId, @RequestParam Long UserId){
-        return studentAnswerService.getExamPaperStudentAnswer(examPaperId,UserId);
+    @GetMapping("/exam-paper-student-answer")
+    public Result getExamPaperStudentAnswer(@RequestParam Long examPaperId, @RequestParam("userId") Long userId){
+        return studentAnswerService.getExamPaperStudentAnswer(examPaperId,userId);
     }
 }

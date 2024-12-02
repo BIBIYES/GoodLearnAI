@@ -15,4 +15,18 @@
         WHERE
         sep.exam_paper_id = #{examPaperId}
     </select>
+    <select id="getStudentExamPapers" resultType="xyz.bibiyes.goodlearnai.vo.AllExamPaperUserStatusVO">
+        SELECT
+            student_exam_paper.*,
+            user.username
+        FROM
+            student_exam_paper
+                JOIN
+            user
+            ON
+                student_exam_paper.user_id = user.user_id
+        WHERE
+            student_exam_paper.status = '已完成';
+    </select>
+
 </mapper>

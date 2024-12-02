@@ -1,5 +1,6 @@
 package xyz.bibiyes.goodlearnai.service.impl;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import xyz.bibiyes.goodlearnai.exception.CustomException;
 import xyz.bibiyes.goodlearnai.mapper.StudentExamPaperMapper;
 import xyz.bibiyes.goodlearnai.service.StudentExamPaperService;
 import xyz.bibiyes.goodlearnai.utils.Result;
+import xyz.bibiyes.goodlearnai.vo.AllExamPaperUserStatusVO;
 import xyz.bibiyes.goodlearnai.vo.ExamPaperUserStatusVO;
 
 import java.util.List;
@@ -62,6 +64,14 @@ public class StudentExamPaperServiceImpl implements StudentExamPaperService {
         }
 
 
+    }
+
+    // 获取所有试卷的完成情况以及用户名字
+    @Override
+    public Result getStudentExamPapers() {
+
+       List<AllExamPaperUserStatusVO> allExamPaperUserStatusVOList = studentExamPaperMapper.getStudentExamPapers();
+       return Result.success("获取所有试卷用户状态成功", allExamPaperUserStatusVOList);
     }
 
 }

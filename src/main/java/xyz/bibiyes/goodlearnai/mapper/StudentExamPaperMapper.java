@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import xyz.bibiyes.goodlearnai.dto.StudentJoinedExamPaperDTO;
 import xyz.bibiyes.goodlearnai.entity.StudentExamPaper;
+import xyz.bibiyes.goodlearnai.utils.Result;
+import xyz.bibiyes.goodlearnai.vo.AllExamPaperUserStatusVO;
 import xyz.bibiyes.goodlearnai.vo.ExamPaperUserStatusVO;
 
 import java.util.List;
@@ -19,4 +21,6 @@ public interface StudentExamPaperMapper extends BaseMapper<StudentExamPaper> {
     int updateStatus(@Param("userId") Long userId, @Param("examPaperId") Long examPaperId);
 
     List<ExamPaperUserStatusVO> getStudentExamPaperByExamPaperId(@Param("examPaperId") Long examPaperId);
+
+    List<AllExamPaperUserStatusVO> getStudentExamPapers();
 }

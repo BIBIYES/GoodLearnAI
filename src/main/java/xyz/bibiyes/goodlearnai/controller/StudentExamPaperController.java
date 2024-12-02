@@ -18,5 +18,10 @@ public class StudentExamPaperController {
     public Result getStudentExamPaperByExamPaperId(@PathVariable Long examPaperId) {
         return studentExamPaperService.getStudentExamPaperByExamPaperId(examPaperId);
     }
+    // 获取所有试卷的完成情况
+    @GetMapping("/get-all-papers")
+    public Result getAllStudentExamPapers() {
+        return studentExamPaperService.getStudentExamPapers();
+    }
 
 }

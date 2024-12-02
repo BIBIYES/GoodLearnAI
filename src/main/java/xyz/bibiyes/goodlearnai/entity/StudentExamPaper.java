@@ -22,6 +22,7 @@ public class StudentExamPaper {
     private Long examPaperId;
     private String joinDate;
     private String status;
+    private String updateDate;
 
     
 }
