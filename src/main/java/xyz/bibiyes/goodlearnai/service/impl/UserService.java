@@ -1,8 +1,11 @@
-package xyz.bibiyes.goodlearnai.service;
+package xyz.bibiyes.goodlearnai.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.bibiyes.goodlearnai.dto.UserProfile;
 import xyz.bibiyes.goodlearnai.entity.User;
 import xyz.bibiyes.goodlearnai.dto.LoginFrom;
 import xyz.bibiyes.goodlearnai.dto.RegisterFrom;
@@ -11,6 +14,7 @@ import xyz.bibiyes.goodlearnai.utils.Jjwt;
 import xyz.bibiyes.goodlearnai.utils.Md5;
 import xyz.bibiyes.goodlearnai.utils.Result;
 import xyz.bibiyes.goodlearnai.service.VerificationCodeService;
+import xyz.bibiyes.goodlearnai.service.IUserService;
 
 import javax.annotation.Resource;
 import java.security.NoSuchAlgorithmException;
@@ -19,7 +23,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class UserService {
+public class UserService extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Resource
     private Jjwt genjwt;
@@ -34,9 +38,10 @@ public class UserService {
      * 用户注册
      *
      * @param registerFrom 封装的用户注册实体类
-     * @throws NoSuchAlgorithmException md5 加密异常
      * @return 返回成功或失败
+     * @throws NoSuchAlgorithmException md5 加密异常
      */
+    @Override
     public Result register(RegisterFrom registerFrom) throws NoSuchAlgorithmException {
         log.info("+++++++++++++++++{}", registerFrom.getUsername());
         log.info("+++++++++++++++++{}", registerFrom.getUserEmail());
@@ -50,7 +55,7 @@ public class UserService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_email", registerFrom.getUserEmail());
         User user = usersMapper.selectOne(queryWrapper);
-        if (user!= null) {
+        if (user != null) {
             return Result.error("邮箱已注册");
         }
 
@@ -90,6 +95,7 @@ public class UserService {
         return user;
     }
 
+    @Override
     public Result login(LoginFrom loginFrom) throws NoSuchAlgorithmException {
         // 1. 验证邮箱是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -121,8 +127,33 @@ public class UserService {
         data.put("id", user.getUserId());
         data.put("user_email", user.getUserEmail());
         data.put("name", user.getUsername());
+        data.put("avatar", user.getAvatar());
+        data.put("cqipcId", user.getCqipcId());
+        data.put("birthday", user.getBirthday());
+        data.put("address", user.getAddress());
         data.put("role", user.getUserRole());
         data.put("token", jwt);
         return Result.success("登陆成功", data);
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param userProfile 要更改的用户信息
+     * @return 返回成功或者失败
+     */
+    @Override
+    public Result changeProfile(UserProfile userProfile) {
+        if (userProfile == null) {
+            return Result.error("用户信息不能为空");
+        }
+        User user = new User();
+        BeanUtil.copyProperties(userProfile, user);
+        if (updateById(user)) {
+            return Result.success("用户信息更新成功");
+        } else {
+            return Result.error("无法添加请检查输入的信息是否有误");
+        }
+
     }
 }
