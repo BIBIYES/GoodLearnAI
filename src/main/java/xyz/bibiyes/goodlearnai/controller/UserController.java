@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.bibiyes.goodlearnai.dto.EmailFrom;
 import xyz.bibiyes.goodlearnai.dto.LoginFrom;
 import xyz.bibiyes.goodlearnai.dto.RegisterFrom;
+import xyz.bibiyes.goodlearnai.dto.UserProfile;
 import xyz.bibiyes.goodlearnai.entity.*;
 import xyz.bibiyes.goodlearnai.mapper.UserMapper;
 import xyz.bibiyes.goodlearnai.service.*;
@@ -16,19 +17,14 @@ import java.util.List;
 
 import static xyz.bibiyes.goodlearnai.service.VerificationCodeService.verificationCodeCache;
 
-/**
- * @author Mouse Sakura
- */
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
+    
     @Resource
-    private UserService usersService;
+    private IUserService iuserService;
     @Resource
     private CourseService courseService;
-
     @Resource
     private ExamPaperService examPaperService;
     @Resource
@@ -41,15 +37,10 @@ public class UserController {
     private StudentAnswerService studentAnswerService;
 
     /**
-     * 用户注册 学生 or 老师
+     * 发送验证码
      */
-
     @PostMapping("/send-verification-code")
     public Result sendVerificationCode(@RequestBody EmailFrom emailFrom) {
-        /*
-          Author: Chen Qinfeng
-          Date: 2024-10-17
-         */
         String email = emailFrom.getEmail();
         System.out.println(email);
         if (email.isEmpty()) {
@@ -69,35 +60,36 @@ public class UserController {
         return Result.success("验证码已发送至您的邮箱，请查收。");
     }
 
+    /**
+     * 用户注册
+     */
     @PostMapping("/register")
     public Result register(@RequestBody RegisterFrom registerForm) throws NoSuchAlgorithmException {
-        /*
-          Author: Chen Qinfeng
-          Date: 2024-10-17
-         */
-        // 验证验证码
         if (VerificationCodeService.verifyVerificationCode(registerForm.getUserEmail(), registerForm.getVerificationCode())) {
-            return usersService.register(registerForm);
+            return iuserService.register(registerForm);
         } else {
             return Result.error("验证码错误");
         }
-
     }
 
     /**
-     * 用户登录 学生 or 老师
+     * 用户登录
      */
     @PostMapping("/login")
     public Result login(@RequestBody LoginFrom loginFrom) throws NoSuchAlgorithmException {
-        return usersService.login(loginFrom);
+        return iuserService.login(loginFrom);
+    }
 
+    /**
+     * 更新个人信息
+     */
+    @PutMapping("/profile")
+    public Result profile(@RequestBody UserProfile userProfile) {
+        return iuserService.changeProfile(userProfile);
     }
 
     /**
      * 获取用户下所有的课程
-     *
-     * @param userId 用户ID
-     * @return List<Course>
      */
     @GetMapping("/{userId}/courses")
     public Result getAllCourses(@PathVariable Long userId) {
@@ -106,14 +98,10 @@ public class UserController {
         } catch (Exception e) {
             return Result.error("Failed to retrieve courses");
         }
-
     }
 
     /**
-     * 在当前用户下创建一个课程
-     *
-     * @param course 传入一个课程的实体
-     * @return 返回创建成功或者创建失败
+     * 创建课程
      */
     @PostMapping("/{userId}/course")
     public Result createCourse(@PathVariable Long userId, @RequestBody Course course) {
@@ -127,10 +115,7 @@ public class UserController {
     }
 
     /**
-     * 创建用户自己一个试卷
-     *
-     * @param examPaper 试卷对象
-     * @return 返回创建成功或者创建失败
+     * 创建试卷
      */
     @PostMapping("/{userId}/exam-paper")
     public Result insertExamPaper(@PathVariable Long userId, @RequestBody ExamPaper examPaper) {
@@ -144,12 +129,8 @@ public class UserController {
         }
     }
 
-
     /**
-     * 获取用户自己的试卷
-     *
-     * @param userId 用户ID
-     * @return List<ExamPaper>
+     * 获取用户的试卷
      */
     @GetMapping("/{userId}/exam-papers")
     public Result selectExamPaperByUserId(@PathVariable Long userId) {
@@ -161,13 +142,8 @@ public class UserController {
         }
     }
 
-
     /**
-     * 加入一个试卷
-     *
-     * @param userId      用户ID
-     * @param examPaperId 试卷ID
-     * @return 返回成功或者失败
+     * 加入试卷
      */
     @PostMapping("/{userId}/exam-papers/{examPaperId}")
     public Result joinExamPaper(@PathVariable Long userId, @PathVariable Long examPaperId) {
@@ -177,15 +153,13 @@ public class UserController {
         studentExamPaper.setExamPaperId(examPaperId);
         studentExamPaper.setUserId(userId);
         studentExamPaper.setStatus("未完成");
-        return studentExamPaperService.joinExamPaper(studentExamPaper) ? Result.success("添加试卷成功") : Result.error("添加失败你已经存在该试卷中");
-
+        return studentExamPaperService.joinExamPaper(studentExamPaper) ? 
+            Result.success("添加试卷成功") : 
+            Result.error("添加失败你已经存在该试卷中");
     }
 
     /**
-     * 获取用户加入的试卷
-     *
-     * @param userId 用户ID
-     * @return List<Map < String, Object>>
+     * 获取学生加入的试卷
      */
     @GetMapping("/{userId}/student-exam-papers")
     public Result getExamPapersByStudentId(@PathVariable Long userId) {
@@ -193,27 +167,23 @@ public class UserController {
     }
 
     /**
-     * 提交试卷
-     *
-     * @param userId            用户ID
-     * @param examPaperId       试卷ID
-     * @param studentAnswerList 学生答案列表
-     * @return 返回成功或者失败
+     * 提交试卷答案
      */
     @PostMapping("/{userId}/exam-paper/{examPaperId}/student-answer")
-    public Result insertStudentAnswer(@PathVariable Long userId, @PathVariable Long examPaperId, @RequestBody List<StudentAnswer> studentAnswerList) {
+    public Result insertStudentAnswer(
+            @PathVariable Long userId, 
+            @PathVariable Long examPaperId, 
+            @RequestBody List<StudentAnswer> studentAnswerList) {
         System.out.println(userId);
         System.out.println(examPaperId);
         System.out.println(studentAnswerList);
 
-            boolean flag = studentAnswerService.insertStudentAnswerList(userId, examPaperId, studentAnswerList);
-            System.out.println(flag);
-            if (flag) {
-                return Result.success("所有答案已经全部提交");
-            } else {
-                return Result.error("答案提交失败");
-            }
+        boolean flag = studentAnswerService.insertStudentAnswerList(userId, examPaperId, studentAnswerList);
+        System.out.println(flag);
+        if (flag) {
+            return Result.success("所有答案已经全部提交");
+        } else {
+            return Result.error("答案提交失败");
+        }
     }
-
-
-}
+} 
