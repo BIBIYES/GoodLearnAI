@@ -10,6 +10,7 @@ import xyz.bibiyes.goodlearnai.entity.*;
 import xyz.bibiyes.goodlearnai.mapper.UserMapper;
 import xyz.bibiyes.goodlearnai.service.*;
 import xyz.bibiyes.goodlearnai.utils.Result;
+import xyz.bibiyes.goodlearnai.vo.WrongQuestionVO;
 
 import javax.annotation.Resource;
 import java.security.NoSuchAlgorithmException;
@@ -185,5 +186,11 @@ public class UserController {
         } else {
             return Result.error("答案提交失败");
         }
+    }
+    // 获取所有的学生模糊查询版本
+    @GetMapping("/get-all-student")
+    public Result getAllStudent(@RequestParam(value = "name" ) String name) {
+        return iuserService.getAllStudent(name);
+
     }
 } 

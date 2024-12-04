@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.bibiyes.goodlearnai.mapper.WrongQuestionMapper">
+    <select id="selectWrongQuestions" resultType="xyz.bibiyes.goodlearnai.vo.WrongQuestionVO">
+        SELECT 
+            wq.wrong_questions_id,
+            ep.exam_paper_name,
+            q.question_title,
+            q.question_content,
+            wq.wrong_answer,
+            wq.ai_answer,
+            wq.create_time
+        FROM wrong_question wq
+        LEFT JOIN exam_paper ep ON wq.exam_paper_id = ep.exam_paper_id
+        LEFT JOIN question q ON wq.question_id = q.question_id
+        WHERE wq.user_id = #{userId}
+        <if test="examPaperName != null and examPaperName != ''">
+            AND ep.exam_paper_name LIKE CONCAT('%', #{examPaperName}, '%')
+        </if>
+        <if test="questionTitle != null and questionTitle != ''">
+            AND q.question_title LIKE CONCAT('%', #{questionTitle}, '%')
+        </if>
+        ORDER BY wq.create_time DESC
+    </select>
+</mapper>

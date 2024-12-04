@@ -35,4 +35,6 @@ public interface IUserService extends IService<User> {
      * @return 返回成功或者失败
      */
     Result changeProfile(UserProfile userProfile);
+
+    Result getAllStudent(String name);
 } 

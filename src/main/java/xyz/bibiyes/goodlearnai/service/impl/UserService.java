@@ -19,6 +19,7 @@ import xyz.bibiyes.goodlearnai.service.IUserService;
 import javax.annotation.Resource;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -155,5 +156,16 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
             return Result.error("无法添加请检查输入的信息是否有误");
         }
 
+    }
+    // 获取所有学生可通过名字模糊查询
+
+    @Override
+    public Result getAllStudent(String name) {
+        List<User> users = usersMapper.getStudentAll(name);
+        if(users.isEmpty()){
+            return Result.error("没有找到该学生");
+        }else {
+            return Result.success("查询成功",users);
+        }
     }
 }
