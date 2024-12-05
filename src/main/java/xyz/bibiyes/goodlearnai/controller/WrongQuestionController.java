@@ -21,7 +21,7 @@ public class WrongQuestionController {
     }
 
     /**
-     * 获取用户的错题记录
+     * 获取用户的错题记录未标记正确的列表
      * @param userId 用户ID
      * @param examPaperName 试卷名称（可选）
      * @param questionTitle 题目标题（可选）
@@ -39,7 +39,17 @@ public class WrongQuestionController {
     public Result deleteWrongQuestion(@PathVariable Long wrongQuestionsId ,@PathVariable Long userId) {
         return wrongQuestionService.deleteByWrongQuestionsId(wrongQuestionsId,userId);
     }
-
+/**
+ * 获取用户该试卷所有的错误题目
+ */
+@GetMapping("/user/{userId}/exam-paper/{examPaperId}")
+    public Result getWrongQuestionsByExamPaperId(@PathVariable Long userId, @PathVariable Long examPaperId) {
+        List<WrongQuestion> wrongQuestions = wrongQuestionService.lambdaQuery()
+                .eq(WrongQuestion::getUserId, userId)
+                .eq(WrongQuestion::getExamPaperId, examPaperId)
+                .list();
+        return Result.success("获取错题记录成功", wrongQuestions);
+    }
 
 
 
