@@ -13,6 +13,7 @@ public class WrongQuestionVO {
     private String questionContent;   // 题目内容
     private String wrongAnswer;       // 错误答案
     private String aiAnswer;         // AI答案
+    private Long questionId;
     
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime; // 创建时间

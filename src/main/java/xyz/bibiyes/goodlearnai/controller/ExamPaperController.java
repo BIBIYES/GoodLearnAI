@@ -59,5 +59,8 @@ public class ExamPaperController {
             return Result.error("Failed to update exam paper");
         }
     }
+    /**
+     * 获取试卷中的正确答案和错误答案
+     */
 
 }

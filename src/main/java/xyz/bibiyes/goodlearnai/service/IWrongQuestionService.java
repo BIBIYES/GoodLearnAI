@@ -20,4 +20,6 @@ public interface IWrongQuestionService extends IService<WrongQuestion> {
     
     // 添加新的查询方法
     List<WrongQuestionVO> getWrongQuestions(Long userId, String examPaperName, String questionTitle);
+
+    Result deleteByWrongQuestionsId(Long wrongQuestionsId, Long userId);
 }
