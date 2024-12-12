@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+    
 
 import java.net.Proxy;
 import java.util.Arrays;
@@ -19,14 +20,12 @@ public class ChatController {
     @GetMapping("/chat/sse")
 
     public SseEmitter sseEmitter(String prompt) {
-        // 设置代理，国内需要，国外不需要
-//        Proxy proxy = Proxys.http("127.0.0.1", 10809); // 替换为你实际的代理地址和端口
 
-        // 初始化 ChatGPTStream 对象
-        // 替换为你的实际 API Key
+        // 初始化 ChatStream 对象
+
         ChatGPTStream chatGPTStream = ChatGPTStream.builder().timeout(600).apiKey("fastgpt-urpkByyW8oYea2ApEdvAzTaFsszfndHce36pZY7DXMC12NcXzt6aQ3")
 //                .proxy(proxy)
-                .apiHost("https://cloud.fastgpt.cn/api/") // 替换为你的实际 API 主机地址
+                .apiHost("192.168.1.303")
                 .build().init();
 
         // 创建 SseEmitter 对象，用于推送事件到客户端
@@ -48,4 +47,8 @@ public class ChatController {
         // 返回 SseEmitter 对象，开始向客户端推送事件
         return sseEmitter;
     }
+
+
 }
+
+

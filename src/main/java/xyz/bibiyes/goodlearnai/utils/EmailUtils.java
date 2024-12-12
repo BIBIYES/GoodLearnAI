@@ -12,14 +12,16 @@ public class EmailUtils {
     public static void sendAuthCodeEmail(String email, String authCode) throws EmailSendException {
         try {
             HtmlEmail mail = new HtmlEmail();
-            mail.setHostName("smtp.qq.com");
-            mail.setAuthentication("3416939515@qq.com", "dexcjsejmuppcjjj");
-            mail.setFrom("3416939515@qq.com", "hzx");
+            mail.setHostName("smtp.163.com");
+            mail.setAuthentication("mousehaocat@163.com", "NBiANiyppQADxYXg");
+            mail.setFrom("mousehaocat@163.com", "好助学");
             mail.setSSLOnConnect(false);
             mail.addTo(email);
             mail.setCharset("UTF-8");
             mail.setSubject("好助学【验证码】");
-            String emailContent = "<html lang=\"zh-CN\">\n" +
+
+            String emailContent = "<!DOCTYPE html>\n" +
+                    "<html lang=\"zh-CN\">\n" +
                     "<head>\n" +
                     "    <meta charset=\"UTF-8\">\n" +
                     "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
@@ -27,56 +29,63 @@ public class EmailUtils {
                     "    <style>\n" +
                     "        body {\n" +
                     "            font-family: Arial, sans-serif;\n" +
-                    "            background-color: #f4f4f4;\n" +
-                    "            margin: 0;\n" +
-                    "            padding: 0;\n" +
-                    "        }\n" +
-                    "        .container {\n" +
-                    "            width: 100%;\n" +
-                    "            max-width: 600px;\n" +
-                    "            margin: 20px auto;\n" +
-                    "            background-color: #fff;\n" +
-                    "            padding: 20px;\n" +
-                    "            border-radius: 8px;\n" +
-                    "            box-shadow: 0 2px 5px rgba(0,0,0,0.1);\n" +
-                    "        }\n" +
-                    "        h1 {\n" +
+                    "            background-color: #f4f4f9;\n" +
                     "            color: #333;\n" +
-                    "            font-size: 24px;\n" +
+                    "            padding: 20px;\n" +
+                    "            margin: 0;\n" +
                     "        }\n" +
-                    "        p {\n" +
-                    "            color: #666;\n" +
-                    "            font-size: 16px;\n" +
+                    "        .email-container {\n" +
+                    "            max-width: 600px;\n" +
+                    "            margin: 0 auto;\n" +
+                    "            background-color: #fff;\n" +
+                    "            border-radius: 10px;\n" +
+                    "            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);\n" +
+                    "            padding: 20px;\n" +
                     "        }\n" +
-                    "        .code {\n" +
-                    "            font-size: 22px;\n" +
-                    "            color: #4CAF50;\n" +
-                    "            font-weight: bold;\n" +
-                    "            background-color: #f0f0f0;\n" +
-                    "            padding: 10px;\n" +
-                    "            border-radius: 5px;\n" +
+                    "        .email-header {\n" +
                     "            text-align: center;\n" +
-                    "            letter-spacing: 2px;\n" +
+                    "            padding-bottom: 20px;\n" +
+                    "            border-bottom: 1px solid #ddd;\n" +
+                    "        }\n" +
+                    "        .email-header h1 {\n" +
+                    "            font-size: 24px;\n" +
+                    "            color: #4CAF50;\n" +
+                    "        }\n" +
+                    "        .email-content {\n" +
+                    "            text-align: center;\n" +
+                    "            padding: 20px;\n" +
+                    "        }\n" +
+                    "        .verification-code {\n" +
+                    "            font-size: 32px;\n" +
+                    "            font-weight: bold;\n" +
+                    "            color: #FF5722;\n" +
+                    "            padding: 10px 20px;\n" +
+                    "            background-color: #f1f1f1;\n" +
+                    "            border-radius: 8px;\n" +
                     "            margin: 20px 0;\n" +
                     "        }\n" +
-                    "        .footer {\n" +
-                    "            font-size: 12px;\n" +
-                    "            color: #999;\n" +
+                    "        .email-footer {\n" +
                     "            text-align: center;\n" +
-                    "            margin-top: 20px;\n" +
+                    "            padding-top: 20px;\n" +
+                    "            font-size: 12px;\n" +
+                    "            color: #777;\n" +
+                    "            border-top: 1px solid #ddd;\n" +
                     "        }\n" +
                     "    </style>\n" +
                     "</head>\n" +
                     "<body>\n" +
-                    "    <div class=\"container\">\n" +
-                    "        <h1>好助学验证码</h1>\n" +
-                    "        <p>您好，</p>\n" +
-                    "        <p>您正在进行重要操作，您的验证码为：</p>\n" +
-                    "        <div class=\"code\">" + authCode + "</div>\n" +
-                    "        <p>请在 5 分钟内输入验证码进行验证。若非您本人操作，请忽略此邮件。</p>\n" +
-                    "        <p>感谢您的使用！</p>\n" +
-                    "        <div class=\"footer\">\n" +
-                    "            &copy; 2024 重庆工业职业技术学院. 保留所有权利。\n" +
+                    "    <div class=\"email-container\">\n" +
+                    "        <div class=\"email-header\">\n" +
+                    "            <h1>好助学 验证码</h1>\n" +
+                    "        </div>\n" +
+                    "        <div class=\"email-content\">\n" +
+                    "            <p>您好，</p>\n" +
+                    "            <p>您正在进行重要操作，验证码如下：</p>\n" +
+                    "            <div class=\"verification-code\">" + authCode + "</div>\n" +
+                    "            <p>请在 5 分钟内输入验证码进行验证。<br>若非您本人操作，请忽略此邮件。</p>\n" +
+                    "        </div>\n" +
+                    "        <div class=\"email-footer\">\n" +
+                    "            © 2024 重庆工业职业技术学院. 保留所有权利。\n" +
                     "        </div>\n" +
                     "    </div>\n" +
                     "</body>\n" +
