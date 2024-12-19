@@ -37,4 +37,6 @@ public interface IUserService extends IService<User> {
     Result changeProfile(UserProfile userProfile);
 
     Result getAllStudent(String name);
-} 
+
+    Result getStudentWrongQuestionView(Long userId);
+}

@@ -23,9 +23,9 @@ public class ChatController {
 
         // 初始化 ChatStream 对象
 
-        ChatGPTStream chatGPTStream = ChatGPTStream.builder().timeout(600).apiKey("fastgpt-urpkByyW8oYea2ApEdvAzTaFsszfndHce36pZY7DXMC12NcXzt6aQ3")
+        ChatGPTStream chatGPTStream = ChatGPTStream.builder().timeout(600).apiKey("fastgpt-xCyK8iQF4gSmmiZeeAcHarJC58XikqPQizjOilK3k5eumw9PilcXISSc")
 //                .proxy(proxy)
-                .apiHost("192.168.1.303")
+                .apiHost("http://10.181.146.107/api/") // 替换为你的实际 API 主机地址
                 .build().init();
 
         // 创建 SseEmitter 对象，用于推送事件到客户端

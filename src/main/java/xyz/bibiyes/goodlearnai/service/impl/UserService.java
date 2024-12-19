@@ -168,4 +168,10 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
             return Result.success("查询成功",users);
         }
     }
+
+    // 获取学生用户的错题计数
+    @Override
+    public Result getStudentWrongQuestionView(Long userId) {
+        return Result.success("查询成功",usersMapper.getStudentWrongQuestionView(userId));
+    }
 }

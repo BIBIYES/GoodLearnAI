@@ -7,4 +7,10 @@
             parameterType="java.lang.String">
         SELECT * FROM user WHERE user_role = 'student' AND username LIKE CONCAT('%', #{name}, '%')
     </select>
+    <!-- 新增错题查询 -->
+    <select id="getStudentWrongQuestionView" resultType="xyz.bibiyes.goodlearnai.vo.StudentWrongQuestionVO">
+        SELECT * FROM student_wrong_question_view
+        WHERE user_id = #{userId}
+    </select>
+
 </mapper>

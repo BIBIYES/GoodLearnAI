@@ -193,4 +193,10 @@ public class UserController {
         return iuserService.getAllStudent(name);
 
     }
+    // 获取学生的错题数量信息
+    @GetMapping("/{userId}/student_wrong_question_view")
+    //获取学生的错题数量信息
+    public Result getStudentWrongQuestionView(@PathVariable Long userId) {
+        return iuserService.getStudentWrongQuestionView(userId);
+    }
 } 
