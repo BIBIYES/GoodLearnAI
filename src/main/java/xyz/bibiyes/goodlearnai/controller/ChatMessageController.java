@@ -27,7 +27,6 @@ public class ChatMessageController {
     public Result getMessageHistory(@PathVariable Long sessionId) {
       return iChatMessageService.getMessageHistory(sessionId);
     }
-
     // 添加消息
     @PostMapping("/addMessage")
     public Result addMessage(@RequestBody ChatMessage chatMessage) {

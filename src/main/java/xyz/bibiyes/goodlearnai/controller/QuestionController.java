@@ -1,21 +1,17 @@
 package xyz.bibiyes.goodlearnai.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.bibiyes.goodlearnai.entity.Question;
 import xyz.bibiyes.goodlearnai.service.QuestionService;
 import xyz.bibiyes.goodlearnai.utils.Result;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/questions")
 @CrossOrigin
 public class QuestionController {
-
     @Autowired
     private QuestionService questionService;
-
     /**
      * 获取所有题目。
      * @return 返回封装好的所有题目的列表，如果没有题目则返回错误信息。
@@ -29,7 +25,6 @@ public class QuestionController {
             return Result.error("No questions found");
         }
     }
-
     /**
      * 根据题目 ID 获取题目详情。
      * @param questionId 题目的唯一标识。
@@ -44,9 +39,6 @@ public class QuestionController {
             return Result.error("No question found for the provided ID");
         }
     }
-
-
-
     /**
      * 更新指定题目。
      * @param questionId 需要更新的题目的唯一标识。
@@ -65,8 +57,7 @@ public class QuestionController {
     }
 
     /**
-     * 根据题目 ID 删除指定的题目。
-     *
+     * 根据题目 ID 删除指定的题目
      * @param questionId 题目的唯一标识。
      * @return 如果删除成功，返回删除成功的信息，否则返回错误信息。
      */
