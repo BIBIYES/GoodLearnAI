@@ -60,7 +60,7 @@ public class StudentExamPaperServiceImpl implements StudentExamPaperService {
             }
             return Result.success("获取试卷用户状态成功", examPaperUserStatusVOList);
         } catch (CustomException e) {
-            throw new CustomException("试卷id不存在");
+            throw new CustomException("当前试卷无学生加入试卷");
         }
 
 

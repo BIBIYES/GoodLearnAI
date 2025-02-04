@@ -38,7 +38,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         List<Question> list = list(questionQueryWrapper);
         PageInfo<Question> pageInfo = new PageInfo<>(list);
         if(list.isEmpty()){
-            return Result.error("没有找到相关题目");
+            return Result.error("空的课程");
         }
         return Result.success("查询成功", pageInfo);
     }
