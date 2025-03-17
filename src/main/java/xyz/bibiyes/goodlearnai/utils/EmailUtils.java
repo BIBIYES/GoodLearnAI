@@ -1,26 +1,41 @@
 package xyz.bibiyes.goodlearnai.utils;
 
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.HtmlEmail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+@Component
 public class EmailUtils {
+    
+    private static final Logger log = LoggerFactory.getLogger(EmailUtils.class);
+    
+    private static JavaMailSender mailSender;
+    
+    @Autowired
+    public void setMailSender(JavaMailSender mailSender) {
+        EmailUtils.mailSender = mailSender;
+    }
 
     /**
      * Author: Chen Qinfeng
      * Date: 2024-10-17
      * Updated: 2024-12-13
      */
-    public static void sendAuthCodeEmail(String email, String authCode) throws EmailSendException {
+    public static void sendAuthCodeEmail(String to, String authCode) throws EmailSendException {
         try {
-            HtmlEmail mail = new HtmlEmail();
-            mail.setHostName("smtp.163.com");
-            mail.setAuthentication("mousehaocat@163.com", "NBiANiyppQADxYXg");
-            mail.setFrom("mousehaocat@163.com", "好助学");
-            mail.setSSLOnConnect(false);
-            mail.addTo(email);
-            mail.setCharset("UTF-8");
-            mail.setSubject("好助学【验证码】");
-
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            
+            helper.setFrom("15823456412@163.com", "好助学");
+            helper.setTo(to);
+            helper.setSubject("好助学【验证码】");
+            
             String emailContent = "<!DOCTYPE html>\n" +
                     "<html lang=\"zh-CN\">\n" +
                     "<head>\n" +
@@ -136,10 +151,12 @@ public class EmailUtils {
                     "</body>\n" +
                     "</html>";
 
-            mail.setHtmlMsg(emailContent);
-            mail.setTextMsg("您的邮件客户端不支持HTML邮件，请联系支持。");
-            mail.send();
-        } catch (EmailException e) {
+            helper.setText(emailContent, true);
+            
+            mailSender.send(message);
+            
+        } catch (Exception e) {
+            log.error("发送邮件失败", e);
             throw new EmailSendException("发送邮件失败", e);
         }
     }
