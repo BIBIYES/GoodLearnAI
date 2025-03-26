@@ -60,31 +60,18 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
             return Result.error("邮箱已注册");
         }
 
-        // 2. 验证角色和鉴权码
-        log.info("开始验证角色和鉴权码");
-        if (isRoleValid(registerFrom) || "student".equals(registerFrom.getUserRole())) {
-            // 3. 密码加密
-            log.info("开始密码加密");
-            String password = md5.hashPassword(registerFrom.getUserPassword());
+        // 2. 密码加密
+        log.info("开始密码加密");
+        String password = md5.hashPassword(registerFrom.getUserPassword());
 
-            // 4. 保存用户信息
-            log.info("开始保存用户信息");
-            User newUser = createUser(registerFrom, password);
-            usersMapper.insert(newUser);
+        // 3. 保存用户信息
+        log.info("开始保存用户信息");
+        User newUser = createUser(registerFrom, password);
+        usersMapper.insert(newUser);
 
-            return Result.success("注册成功");
-        } else {
-            return Result.error("鉴权码认证失败");
-        }
+        return Result.success("注册成功");
     }
 
-    // 验证角色和鉴权码
-    private boolean isRoleValid(RegisterFrom registerFrom) {
-        if ("teacher".equals(registerFrom.getUserRole())) {
-            return "Abcd1234".equals(registerFrom.getAuthenticator());
-        }
-        return "students".equals(registerFrom.getUserRole());
-    }
 
     // 创建用户对象
     private User createUser(RegisterFrom registerFrom, String password) {
