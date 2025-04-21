@@ -62,6 +62,17 @@ public class UserController {
     }
 
     /**
+     * 添加用户
+     */
+    @PostMapping("/add-user")
+    public Result addUser(@RequestBody RegisterFrom user) {
+        if (user == null) {
+            return Result.error("用户信息不能为空");
+        }
+        return iuserService.addUser(user);
+    }
+
+    /**
      * 用户注册
      */
     @PostMapping("/register")
@@ -72,6 +83,8 @@ public class UserController {
             return Result.error("验证码错误");
         }
     }
+
+
 
     /**
      * 用户登录

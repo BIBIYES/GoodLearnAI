@@ -16,10 +16,10 @@ spring:
       quiet-period: 1000
   # 修改邮件配置为Spring Boot标准格式
   mail:
-    host: smtp.163.com
+    host: smtp.qq.com
     port: 465
-    username: 15823456412@163.com
-    password: EJVT89zUzNLwmQXz
+    username: 2315124408@qq.com
+    password: kqwmxatnjvttecha
     protocol: smtp
     properties:
       mail:
@@ -46,7 +46,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/good_learn_ai?useSSL=false
     username: root
-    password: 12345678
+    password: zxcvg123
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

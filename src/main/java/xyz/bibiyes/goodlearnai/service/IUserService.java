@@ -19,6 +19,8 @@ public interface IUserService extends IService<User> {
      */
     Result register(RegisterFrom registerFrom) throws NoSuchAlgorithmException;
 
+    Result addUser(RegisterFrom registerFrom);
+
     /**
      * 用户登录
      *

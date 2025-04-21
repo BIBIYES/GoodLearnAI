@@ -32,7 +32,7 @@ public class EmailUtils {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             
-            helper.setFrom("15823456412@163.com", "好助学");
+            helper.setFrom("2315124408@qq.com", "好助学");
             helper.setTo(to);
             helper.setSubject("好助学【验证码】");
             

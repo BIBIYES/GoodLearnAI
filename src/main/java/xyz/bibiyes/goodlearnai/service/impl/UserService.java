@@ -36,6 +36,29 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
     private VerificationCodeService verificationCodeService;
 
     /**
+     * 添加用户
+     */
+    @Override
+    public Result addUser(RegisterFrom registerFrom) {
+        try {
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_email", registerFrom.getUserEmail());
+            User user = usersMapper.selectOne(queryWrapper);
+            if (user != null) {
+                return Result.error("邮箱已注册");
+            }
+            String password = md5.hashPassword(registerFrom.getUserPassword());
+            User newUser = createUser(registerFrom, password);
+            usersMapper.insert(newUser);
+            return Result.success("注册成功");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    /**
      * 用户注册
      *
      * @param registerFrom 封装的用户注册实体类
